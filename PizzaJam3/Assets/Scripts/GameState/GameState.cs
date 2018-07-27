@@ -16,6 +16,30 @@ public class IntVec2
     {
         return new IntVec2(b.x + c.x, b.y + c.y);
     }
+
+    public static IntVec2 operator -(IntVec2 b, IntVec2 c)
+    {
+        return new IntVec2(b.x - c.x, b.y - c.y);
+    }
+
+    public override bool Equals(System.Object obj)
+    {
+        IntVec2 iObj = obj as IntVec2;
+        if (iObj == null)
+            return false;
+        else
+            return (iObj.x == x && iObj.y == y);
+    }
+
+    public override int GetHashCode()
+    {
+        return x ^ y;
+    }
+
+    public override string ToString()
+    {
+        return "IntVec2: " + x + " " + y;
+    }
 }
 
 public class GameState
@@ -86,6 +110,83 @@ public class GameState
                 if(!isOOB(to_clear))
                 {
                     tiles_[loc.x, loc.y] = null;
+                }
+            }
+        }
+    }
+
+    public void process()
+    {
+        for (int x = 0; x != dim_; ++x)
+        {
+            for (int y = 0; y != dim_; ++y)
+            {
+                if (tiles_[x, y] != null && tiles_[x, y] is HarvesterRobot)
+                {
+                    (tiles_[x, y] as HarvesterRobot).doRobotAI(new IntVec2(x, y), this);
+                }
+            }
+        }
+    }
+
+    public void placeItemNear(TileItem ti, IntVec2 iv)
+    {
+        if(getItem(iv) == null)
+        {
+            tiles_[iv.x, iv.y] = ti;
+            return;
+        }
+        while(true)
+        {
+            int range = 1;
+            for(int x = -range; x != range; ++x)
+            {
+                for(int y = -range; y != range; ++y)
+                {
+                    IntVec2 niv = new IntVec2(iv.x + x, iv.y + y);
+                    if (getItem(niv) == null && !isOOB(niv))
+                    {
+                        tiles_[iv.x, iv.y] = ti;
+                    }
+                }
+            }
+        }
+    }
+
+    public void handleUnitTick(int x, int y, TileUnit tu)
+    {
+        if (tu.anim == TileUnit.Animation.MOVE)
+        {
+            // Make sure nothing in the way.
+            IntVec2 new_pos = new IntVec2(x + tu.animDir.x, y + tu.animDir.y);
+            if (!isOOB(new_pos) && getItem(new_pos) == null)
+            {
+                tiles_[x, y] = null;
+                tiles_[new_pos.x, new_pos.y] = tu;
+                tu.anim = TileUnit.Animation.IDLE;
+            }
+        }
+
+        if(tu.anim == TileUnit.Animation.HARVEST && tu is HarvesterRobot)
+        {
+            tiles_[x + tu.animDir.x, y + tu.animDir.y] = null;
+            placeItemNear(new ExtractedResource((tu as HarvesterRobot).type, 50), new IntVec2(x + tu.animDir.x, y + tu.animDir.y));
+        }
+    }
+
+    public void tick()
+    {
+        for(int x = 0; x != dim_; ++x)
+        {
+            for(int y = 0; y != dim_; ++y)
+            {
+                if(getItem(new IntVec2(x,y)) != null)
+                {
+                    TileItem ti = getItem(new IntVec2(x, y));
+                    if(ti is TileUnit)
+                    {
+                        handleUnitTick(x, y, ti as TileUnit);
+                    }
                 }
             }
         }

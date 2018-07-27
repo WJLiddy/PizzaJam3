@@ -4,16 +4,34 @@ using UnityEngine;
 
 public class TileRenderer : MonoBehaviour
 {
-    List<GameObject> children = new List<GameObject>();
-
-	// Use this for initialization
-	void Start ()
+    GameObject[,] tiles;
+    GameState gs;
+    // Use this for initialization
+    void Start ()
     {
-        GameState gs = new GameState(100);
+        gs = new GameState(30);
+        tiles = new GameObject[gs.dim_, gs.dim_];
         gs.addClearing(new IntVec2(0, 0), 10);
-        gs.tiles_[0, 0] = new Robot(Resource.Type.WOOD);
+        gs.tiles_[0, 0] = new HarvesterRobot(Resource.Type.WOOD);
+        prepareTiles();
         DrawState(gs);
 	}
+
+    void prepareTiles()
+    {
+        for (int x = 0; x != gs.dim_; x++)
+        {
+            for (int y = 0; y != gs.dim_; y++)
+            {
+                GameObject sprite = Instantiate(Resources.Load<GameObject>("generic_tile_item"));
+                Sprite s = null;
+                sprite.GetComponent<SpriteRenderer>().sprite = s;
+                sprite.transform.SetParent(this.transform);
+                sprite.transform.localPosition = new Vector2(x, y);
+                tiles[x, y] = sprite;
+            }
+        }
+    }
 
     void DrawState(GameState gs)
     {
@@ -26,10 +44,13 @@ public class TileRenderer : MonoBehaviour
                     renderGrass(x, y);
                 } else if (gs.tiles_[x,y] is Resource)
                 {
-                    renderResouce(gs.tiles_[x,y] as Resource, x, y);
-                } else if (gs.tiles_[x,y] is Robot)
+                    renderResource(gs.tiles_[x,y] as Resource, x, y);
+                } else if (gs.tiles_[x,y] is HarvesterRobot)
                 {
-                    renderRobot(gs.tiles_[x, y] as Robot, x, y);
+                    renderRobot(gs.tiles_[x, y] as HarvesterRobot, x, y);
+                } else if (gs.tiles_[x,y] is ExtractedResource)
+                {
+                    renderExtractedResource(gs.tiles_[x, y] as ExtractedResource, x, y);
                 }
                 
             }
@@ -37,9 +58,23 @@ public class TileRenderer : MonoBehaviour
 
     }
 
-    void renderResouce(Resource r,int x, int y)
+    void renderExtractedResource(ExtractedResource r, int x, int y)
     {
-        GameObject sprite = Instantiate(Resources.Load<GameObject>("generic_tile_item"));
+        Sprite s = null;
+        switch (r.type)
+        {
+            case Resource.Type.OIL: s = Resources.Load<Sprite>("Resource/oil_ext"); break;
+            case Resource.Type.ORE: s = Resources.Load<Sprite>("Resource/ore_ext"); break;
+            case Resource.Type.WOOD: s = Resources.Load<Sprite>("Resource/wood_ext"); break;
+        }
+        tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
+    }
+
+
+
+    void renderResource(Resource r,int x, int y)
+    {
+  
         Sprite s = null;
         switch(r.type)
         {
@@ -47,38 +82,33 @@ public class TileRenderer : MonoBehaviour
             case Resource.Type.ORE: s = Resources.Load<Sprite>("Resource/ore_res"); break;
             case Resource.Type.WOOD: s = Resources.Load<Sprite>("Resource/wood_res"); break;
         }
-        sprite.GetComponent<SpriteRenderer>().sprite = s;
-        sprite.transform.SetParent(this.transform);
-        sprite.transform.localPosition = new Vector2(x, y);
+        tiles[x,y].GetComponent<SpriteRenderer>().sprite = s;
     }
 
-    void renderRobot(Robot r, int x, int y)
+    void renderRobot(HarvesterRobot r, int x, int y)
     {
-        GameObject sprite = Instantiate(Resources.Load<GameObject>("generic_tile_item"));
         Sprite s = null;
         switch (r.type)
         {
-            case Resource.Type.OIL: s = Resources.Load<Sprite>("Resource/drillbot"); break;
-            case Resource.Type.ORE: s = Resources.Load<Sprite>("Resource/minebot"); break;
-            case Resource.Type.WOOD: s = Resources.Load<Sprite>("Resource/axebot"); break;
+            case Resource.Type.OIL: s = Resources.Load<Sprite>("Robot/drillbot"); break;
+            case Resource.Type.ORE: s = Resources.Load<Sprite>("Robot/minebot"); break;
+            case Resource.Type.WOOD: s = Resources.Load<Sprite>("Robot/axebot"); break;
         }
-        sprite.GetComponent<SpriteRenderer>().sprite = s;
-        sprite.transform.SetParent(this.transform);
-        sprite.transform.localPosition = new Vector2(x, y);
+        tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
     }
 
 
     void renderGrass(int x, int y)
     {
-        GameObject sprite = Instantiate(Resources.Load<GameObject>("generic_tile_item"));
         Sprite s =  Resources.Load<Sprite>("grass");
-        sprite.GetComponent<SpriteRenderer>().sprite = s;
-        sprite.transform.SetParent(this.transform);
-        sprite.transform.localPosition = new Vector2(x, y);
+        tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
     }
 
     // Update is called once per frame
-    void Update () {
-		
-	}
+    void Update ()
+    {
+        gs.process();
+        gs.tick();
+        DrawState(gs);
+    }
 }

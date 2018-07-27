@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Robot : TileItem
+public class HarvesterRobot : TileUnit
 {
     public Resource.Type type;
-    public Animation anim;
-    public IntVec2 animDir;
 
-    public Robot(Resource.Type rt)
+    public HarvesterRobot(Resource.Type rt)
     {
         anim = Animation.IDLE;
     }
@@ -30,12 +28,18 @@ public class Robot : TileItem
                 }
             }
 
+            //cant go this way
+            if(gs.getItem(toSearch) != null && toSearch != pos)
+            {
+                continue;
+            }
+
             for (int x = -1; x != 2; ++x)
             {
                 for (int y = -1; y != 2; ++y)
                 {
                     IntVec2 nloc = new IntVec2(toSearch.x + x, toSearch.y + y);
-                    if (!alreadyQueued.Contains(nloc))
+                    if (!alreadyQueued.Contains(nloc) && !gs.isOOB(nloc))
                     {
                         searchNodes.Enqueue(nloc);
                         alreadyQueued.Add(nloc);
@@ -58,6 +62,19 @@ public class Robot : TileItem
         if(r != null)
         {
             var list = getPath(pos, r, gs);
+            if(list != null)
+            {
+                // 1 means we didnt go anywhere.
+                Debug.Assert(list.Count > 1);
+                animDir = list[1] - pos;
+                if(list.Count == 2)
+                {
+                    anim = Animation.HARVEST;
+                } else
+                {
+                    anim = Animation.MOVE;
+                }
+            }
         }
     }
 }
