@@ -58,7 +58,7 @@ public class Resource : TileItem
         int count = Random.Range(5, 10);
         for (int i = 0; i != count; ++i)
         {
-            IntVec2 delt = new IntVec2(Random.Range(-10, 10), Random.Range(-10, 10));
+            IntVec2 delt = new IntVec2(Random.Range(-5, 5), Random.Range(-5, 5));
             if (!g.isOOB(iv + delt))
             {
                 createOre(g, iv + delt);

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class GameRenderer : MonoBehaviour
 {
     GameState gs;
-    public List<GameObject> bullets;
     public static readonly float TICK_TIME = 1f;
     public TileRenderer tr;
     public PlayerRenderer pr;
@@ -24,13 +23,23 @@ public class GameRenderer : MonoBehaviour
         gs.tiles_[1, 0] = new CollectorRobot(Resource.Type.WOOD);
         gs.tiles_[2, 0] = new Storage(Resource.Type.WOOD);
         tr.Setup(gs);
+        gs.player = new Player();
         pr.addPlayer(gs);
+        pr.p.gr = this; //disgusting
+        gs.player.gun1 = (new M1911()).spawn(0.5f);
+        gs.player.gun2 = (new M1911()).spawn(0.5f);
 
     }
 
-    public void AddBullet(Gun.FiredProjectile fp)
+    public void AddBullet(Gun.FiredProjectile fp, float base_angle_deg, Vector2 start)
     {
-
+        GameObject go = Instantiate(Resources.Load<GameObject>("bullet"));
+        float ang = base_angle_deg + fp.accuracy_modifier_degree;
+        go.transform.localEulerAngles = new Vector3(0,0,ang);
+        go.GetComponent<Rigidbody2D>().velocity = new Vector3(fp.speed * Mathf.Cos(ang * Mathf.Deg2Rad), fp.speed * Mathf.Sin(ang * Mathf.Deg2Rad));
+        go.GetComponent<RenderBullet>().is_crit = fp.is_crit;
+        go.GetComponent<RenderBullet>().range =  fp.range;
+        go.transform.localPosition = start;
     }
 
     string getTime(int hr, int min)
@@ -47,7 +56,7 @@ public class GameRenderer : MonoBehaviour
         {
             return hr + ":" + min.ToString("00") + " PM";
         }
-        return hr - 12 + ":" + min.ToString("00") + "PM";
+        return hr - 12 + ":" + min.ToString("00") + " PM";
     }
 
     public void updateResourceCount()

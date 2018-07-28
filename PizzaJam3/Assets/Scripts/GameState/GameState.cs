@@ -44,7 +44,7 @@ public class IntVec2
 
 public class GameState
 {
-    public static readonly float TREE_THRESH = 0.7f;
+    public static readonly float TREE_THRESH = 0.5f;
     public static readonly int minutes_per_tick = 5;
     public int dim_;
     public TileItem[,] tiles_;
@@ -79,7 +79,7 @@ public class GameState
         {
             for (int y = 0; y != dim_; ++y)
             {
-                if (Mathf.PerlinNoise(((float)x) / 10f, ((float)y) / 10f) > TREE_THRESH)
+                if (Mathf.PerlinNoise(((float)x) / 7f, ((float)y) / 7f) > TREE_THRESH)
                 {
                     Resource.AddWood(this, new IntVec2(x, y));
                 }
@@ -90,7 +90,7 @@ public class GameState
     public void addOres()
     {
         // one ore per 20 by 20
-        for(int i = 0; i != ((dim_*dim_) / 1500); ++i)
+        for(int i = 0; i != ((dim_*dim_) / 700); ++i)
         {
             Resource.AddOre(this,new IntVec2(Random.Range(0, dim_), Random.Range(0,dim_)));
         }
@@ -98,7 +98,7 @@ public class GameState
 
     public void addOils()
     {    
-        for (int i = 0; i != ((dim_ * dim_) / 3000); ++i)
+        for (int i = 0; i != ((dim_ * dim_) / 1400); ++i)
         {
             Resource.AddOil(this,new IntVec2(Random.Range(0, dim_), Random.Range(0, dim_)));
         }
