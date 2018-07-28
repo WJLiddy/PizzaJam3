@@ -12,6 +12,7 @@ public class CollectorRobot : TileUnit, Robot
     public CollectorRobot(Resource.Type rt)
     {
         anim = Animation.IDLE;
+        type = rt;
     }
 
     public bool collectable(TileItem t)

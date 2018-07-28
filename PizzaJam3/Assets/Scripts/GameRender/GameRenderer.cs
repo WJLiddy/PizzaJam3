@@ -17,6 +17,9 @@ public class GameRenderer : MonoBehaviour
     public Text resourceText;
     float tick_time_left;
 
+    public GameObject bItem1;
+    public GameObject bItem2;
+
     // Use this for initialization
     void Start ()
     {
@@ -36,6 +39,27 @@ public class GameRenderer : MonoBehaviour
 
         Sound.audioSource = pr.gameObject.AddComponent<AudioSource>();
         Sound.PreLoad();
+
+    }
+
+    public void showOptions(TileItem tu)
+    {
+        if(tu is Storage)
+        {
+            bItem1.SetActive(true);
+            bItem2.SetActive(true);
+            bItem1.GetComponentInChildren<Text>().text = "Make [H]arvester";
+            bItem2.GetComponentInChildren<Text>().text = "Make [C]ollector";
+        } else
+        {
+            hideOptions();
+        }
+    }
+
+    public void hideOptions()
+    {
+        bItem1.SetActive(false);
+        bItem2.SetActive(false);
     }
 
     public void AddBullet(Gun.FiredProjectile fp, float base_angle_deg, Vector2 start)
@@ -77,6 +101,7 @@ public class GameRenderer : MonoBehaviour
         }
         return hr - 12 + ":" + min.ToString("00") + " PM";
     }
+
 
     public void updateResourceCount()
     {
@@ -131,5 +156,23 @@ public class GameRenderer : MonoBehaviour
             return Color.black;
         }
         return Color.black;
+    }
+
+    public void runOption(int opt)
+    {
+        IntVec2 v = pr.p.getLookAt();
+        TileItem t = gs.getItem(v);
+        if (t is Storage)
+        {
+            if(opt == 1)
+            {
+                gs.placeItemNear(new HarvesterRobot((t as Storage).type), v);
+            }
+
+            if(opt == 2)
+            {
+                gs.placeItemNear(new CollectorRobot((t as Storage).type), v);
+            }
+        }
     }
 }

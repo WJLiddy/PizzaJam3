@@ -75,11 +75,13 @@ public class GameState
 
     public void addTrees()
     {
+        float xbias = Random.Range(0, 1000f);
+        float ybias = Random.Range(0, 1000f);
         for (int x = 0; x != dim_; ++x)
         {
             for (int y = 0; y != dim_; ++y)
             {
-                if (Mathf.PerlinNoise(((float)x) / 7f, ((float)y) / 7f) > TREE_THRESH)
+                if (Mathf.PerlinNoise(xbias + ((float)x) / 7f, ybias + ((float)y) / 7f) > TREE_THRESH)
                 {
                     Resource.AddWood(this, new IntVec2(x, y));
                 }

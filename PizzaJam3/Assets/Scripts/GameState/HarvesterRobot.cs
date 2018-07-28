@@ -12,6 +12,7 @@ public class HarvesterRobot : TileUnit, Robot
     public HarvesterRobot(Resource.Type rt)
     {
         anim = Animation.IDLE;
+        type = rt;
     }
 
     public IntVec2 findResource(IntVec2 pos, GameState gs)

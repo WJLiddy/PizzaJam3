@@ -152,6 +152,39 @@ public class PlayerSprite : MonoBehaviour
             gun2_did_fire_last_frame = false;
         }
     }
+
+    IntVec2 getFacing()
+    {
+        switch (GetComponent<SpriteRenderer>().sprite.name)
+        {
+            case "u": case "u2": return new IntVec2(0, 1);
+            case "ur": case "ur2": return new IntVec2(1, 1);
+            case "r": case "r2": return new IntVec2(1, 0);
+            case "dr": case "dr2": return new IntVec2(1, -1);
+            case "d": case "d2": return new IntVec2(0, -1);
+            case "dl": case "dl2": return new IntVec2(-1, -1);
+            case "l": case "l2": return new IntVec2(-1, 0);
+            case "ul": case "ul2": return new IntVec2(-1, 1);
+        }
+        return new IntVec2(0, 0);
+    }
+
+    public IntVec2 getLookAt()
+    {
+        return new IntVec2((int)(gs.player.location.x + 0.5 + getFacing().x), (int)(gs.player.location.y + 0.5 + getFacing().y));
+    }
+
+    void optionsWatchdog()
+    {
+        IntVec2 lookat = getLookAt();
+        if(gs.getItem(lookat) != null)
+        {
+            gr.showOptions(gs.getItem(lookat));
+        } else
+        {
+            gr.hideOptions();
+        }
+    }
 	// Update is called once per frame
 	void Update ()
     {
@@ -159,7 +192,8 @@ public class PlayerSprite : MonoBehaviour
 
         if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             gunHandler();
-       
+
+        optionsWatchdog();
 
         gs.player.location = transform.localPosition;
     }
