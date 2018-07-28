@@ -7,6 +7,12 @@ public class Revolver : Gun
 
     public float jam_rate = 0;
 
+    public override string getName()
+    {
+        return "Revolver";
+    }
+
+
     public override Gun spawn(float rarity)
     {
         TightCannon c = new TightCannon();

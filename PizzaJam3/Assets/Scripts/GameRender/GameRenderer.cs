@@ -20,9 +20,14 @@ public class GameRenderer : MonoBehaviour
     public GameObject bItem1;
     public GameObject bItem2;
 
+    public GameObject itemSlot1;
+    public GameObject itemSlot2;
+
     // Use this for initialization
     void Start ()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 30; // Sorry, my AI needs this extra time. Threading is out of the option since i can't clone();
         gs = new GameState(100);
         gs.addClearing(new IntVec2(0, 0), 10);
         gs.tiles_[0, 0] = new HarvesterRobot(Resource.Type.WOOD);
@@ -39,6 +44,8 @@ public class GameRenderer : MonoBehaviour
 
         Sound.audioSource = pr.gameObject.AddComponent<AudioSource>();
         Sound.PreLoad();
+
+        gs.process(); //sets up animations and moves.
 
     }
 
@@ -115,13 +122,12 @@ public class GameRenderer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         tick_time_left -= Time.deltaTime;
         if (tick_time_left < 0)
         { 
-            gs.process();
-            gs.tick();
-            tr.DrawState(gs);
+            gs.tick(); // actually moves the units. 
+            gs.process(); //sets up animations and moves.
+            tr.DrawState(gs,false); // all animation information is lost!
             tick_time_left = TICK_TIME;
             l.color = getLighting(gs.time_hr, gs.time_min);
             time.text = getTime(gs.time_hr, gs.time_min);

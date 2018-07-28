@@ -9,6 +9,12 @@ public class M1911 : Gun
     public float range;
     public int capacity;
 
+    public override string getName()
+    {
+        return "M1911";
+    }
+
+
     public override Gun spawn(float rarity)
     {
         M1911 m = new M1911();

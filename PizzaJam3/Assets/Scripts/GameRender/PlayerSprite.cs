@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerSprite : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class PlayerSprite : MonoBehaviour
 
     bool gun1_did_fire_last_frame = false;
     bool gun2_did_fire_last_frame = true;
+
+    float reload_timer_1 = 0;
+    float reload_timer_2 = 0;
 
     GameState gs;
     public GameRenderer gr;
@@ -123,10 +127,29 @@ public class PlayerSprite : MonoBehaviour
             gs.tileWouldBeOccupied((int)(0.5f + lp.x + cbox_radius), (int)(0.5f + lp.y - cbox_radius));
     }
 
+    void updateItemSlot()
+    {
+        gr.itemSlot1.GetComponentInChildren<Text>().text = gs.player.gun1.getName() + "\n" + 
+            ((reload_timer_1 > 0) ? "reloading" : gs.player.gun1.bulletsLeft + "/" + gs.player.gun1.getCapacity());
+        gr.itemSlot2.GetComponentInChildren<Text>().text = gs.player.gun2.getName() + "\n" +
+            ((reload_timer_2 > 0) ? "reloading" : gs.player.gun2.bulletsLeft + "/" + gs.player.gun2.getCapacity());
+    }
 
     void gunHandler()
     {
-        if (Input.GetMouseButton(0) && gs.player.gun1 != null)
+        if(Input.GetKeyDown("q") && reload_timer_1 <= 0)
+        {
+            gs.player.gun1.bulletsLeft = gs.player.gun1.getCapacity();
+            reload_timer_1 = gs.player.gun1.getReloadTime();
+        }
+
+        if (Input.GetKeyDown("e") && reload_timer_2 <= 0)
+        {
+            gs.player.gun2.bulletsLeft = gs.player.gun2.getCapacity();
+            reload_timer_2 = gs.player.gun2.getReloadTime();
+        }
+
+        if (Input.GetMouseButton(0) && gs.player.gun1 != null && reload_timer_1 <= 0)
         {
             if (!gun1_did_fire_last_frame || gs.player.gun1.isFullAuto())
             {
@@ -139,7 +162,7 @@ public class PlayerSprite : MonoBehaviour
             gun1_did_fire_last_frame = false;
         }
 
-        if (Input.GetMouseButton(1) && gs.player.gun2 != null)
+        if (Input.GetMouseButton(1) && gs.player.gun2 != null && reload_timer_2 <= 0)
         {
             if (!gun2_did_fire_last_frame || gs.player.gun2.isFullAuto())
             {
@@ -150,6 +173,17 @@ public class PlayerSprite : MonoBehaviour
         else
         {
             gun2_did_fire_last_frame = false;
+        }
+
+        if(reload_timer_1 > 0)
+        {
+            reload_timer_1 -= Time.deltaTime;
+        }
+
+
+        if (reload_timer_2 > 0)
+        {
+            reload_timer_2 -= Time.deltaTime;
         }
     }
 
@@ -196,6 +230,8 @@ public class PlayerSprite : MonoBehaviour
         optionsWatchdog();
 
         gs.player.location = transform.localPosition;
+
+        updateItemSlot();
     }
 
     public float getMouseAngle()
@@ -216,11 +252,16 @@ public class PlayerSprite : MonoBehaviour
     {
         Player p = gs.player;
 
-        if (g.getCapacity() > 0)
+        if (g.bulletsLeft > 0)
         {
             var v = g.fireGun();
             foreach(var b in v)
             {
+                if(g.bulletsLeft == 0)
+                {
+                    return;
+                }
+                g.bulletsLeft--;
                 gun1_did_fire_last_frame = true;
                 gr.AddBullet(b, getMouseAngle(),this.transform.localPosition);
             }

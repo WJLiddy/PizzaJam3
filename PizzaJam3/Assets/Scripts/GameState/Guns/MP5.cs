@@ -10,6 +10,13 @@ public class MP5 : Gun
     public int burst_size;
     public float spread;
     public float range;
+
+    public override string getName()
+    {
+        return "MP5";
+    }
+
+
     public override Gun spawn(float rarity)
     {
         MP5 m = new MP5();

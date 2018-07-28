@@ -16,6 +16,8 @@ public abstract class Gun
         // is a crit. 
        public  bool is_crit;
     }
+    public abstract string getName();
+    public int bulletsLeft = 0;
     public abstract Gun spawn(float rarity);
     public abstract int getCapacity();
     public abstract List<FiredProjectile> fireGun();

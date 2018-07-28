@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ShortyShotgun : Gun
 {
+    public override string getName()
+    {
+        return "Shorty Shotty";
+    }
 
     public float jam_rate = 0.3f; // this should be high for this gun I assume this is 30% chance
 

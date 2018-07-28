@@ -107,15 +107,21 @@ public abstract class TileUnit : TileItem
         return null;
     }
 
-
+    int MAX_RANGE = 1000;
     public IntVec2 find(IntVec2 pos, GameState gs, Func<TileItem,bool> f)
     {
         Queue<IntVec2> searchNodes = new Queue<IntVec2>();
         HashSet<IntVec2> alreadyQueued = new HashSet<IntVec2>();
         searchNodes.Enqueue(pos);
         alreadyQueued.Add(pos);
+        int searched = 0;
         while (searchNodes.Count > 0)
         {
+            if(searched > MAX_RANGE)
+            {
+                return null;
+            }
+
             IntVec2 toSearch = searchNodes.Dequeue();
             if (gs.getItem(toSearch) != null)
             {
@@ -140,6 +146,7 @@ public abstract class TileUnit : TileItem
                     {
                         searchNodes.Enqueue(nloc);
                         alreadyQueued.Add(nloc);
+                        searched++;                    
                     }
                 }
             }

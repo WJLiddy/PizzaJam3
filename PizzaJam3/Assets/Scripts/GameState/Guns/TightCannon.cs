@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class TightCannon : Gun
 {
+    public override string getName()
+    {
+        return "Tight Cannon";
+    }
+
 
     public float jam_rate = 0;
 

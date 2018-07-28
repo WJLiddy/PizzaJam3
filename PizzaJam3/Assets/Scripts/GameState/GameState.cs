@@ -33,7 +33,8 @@ public class IntVec2
 
     public override int GetHashCode()
     {
-        return x ^ y;
+        int tmp = (y + ((x + 1) / 2));
+        return x + (tmp * tmp);
     }
 
     public override string ToString()
@@ -92,7 +93,7 @@ public class GameState
     public void addOres()
     {
         // one ore per 20 by 20
-        for(int i = 0; i != ((dim_*dim_) / 700); ++i)
+        for(int i = 0; i != ((dim_*dim_) / 500); ++i)
         {
             Resource.AddOre(this,new IntVec2(Random.Range(0, dim_), Random.Range(0,dim_)));
         }
@@ -100,7 +101,7 @@ public class GameState
 
     public void addOils()
     {    
-        for (int i = 0; i != ((dim_ * dim_) / 1400); ++i)
+        for (int i = 0; i != ((dim_ * dim_) / 1000); ++i)
         {
             Resource.AddOil(this,new IntVec2(Random.Range(0, dim_), Random.Range(0, dim_)));
         }
@@ -116,7 +117,7 @@ public class GameState
                 IntVec2 to_clear = new IntVec2(loc.x + x, loc.y + y);
                 if(!isOOB(to_clear))
                 {
-                    tiles_[loc.x, loc.y] = null;
+                    tiles_[to_clear.x, to_clear.y] = null;
                 }
             }
         }
