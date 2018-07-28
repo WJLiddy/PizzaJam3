@@ -122,18 +122,19 @@ public class PlayerSprite : MonoBehaviour
             gs.tileWouldBeOccupied((int)(0.5f + lp.x + cbox_radius), (int)(0.5f + lp.y + cbox_radius)) ||
             gs.tileWouldBeOccupied((int)(0.5f + lp.x + cbox_radius), (int)(0.5f + lp.y - cbox_radius));
     }
-	// Update is called once per frame
-	void Update ()
+
+
+    void gunHandler()
     {
-        doAnim();
-        if(Input.GetMouseButton(0) && gs.player.gun1 != null)
+        if (Input.GetMouseButton(0) && gs.player.gun1 != null)
         {
             if (!gun1_did_fire_last_frame || gs.player.gun1.isFullAuto())
             {
                 gun1_did_fire_last_frame = true;
                 shootGun(gr, gs.player.gun1);
             }
-        } else
+        }
+        else
         {
             gun1_did_fire_last_frame = false;
         }
@@ -150,6 +151,17 @@ public class PlayerSprite : MonoBehaviour
         {
             gun2_did_fire_last_frame = false;
         }
+    }
+	// Update is called once per frame
+	void Update ()
+    {
+        doAnim();
+
+        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            gunHandler();
+       
+
+        gs.player.location = transform.localPosition;
     }
 
     public float getMouseAngle()
@@ -178,7 +190,6 @@ public class PlayerSprite : MonoBehaviour
                 gun1_did_fire_last_frame = true;
                 gr.AddBullet(b, getMouseAngle(),this.transform.localPosition);
             }
-
         }
     }
 

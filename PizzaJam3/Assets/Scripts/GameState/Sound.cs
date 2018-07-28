@@ -4,47 +4,25 @@ using UnityEngine;
 
 public class Sound : MonoBehaviour
 {
-    public AudioSource NoiseSource;
 
-    bool NoisePlay;
-    bool ToggleChange;
+    public static AudioSource audioSource;
 
-    public static PlaySound(string noise)
-	{
-        // noise does nothing at the moment
+    private static Dictionary<string, AudioClip> sounds;
 
-        NoiseSource = GetComponent<AudioSource>();
-
-        NoiseSource.Play();
-
-        return null;
-	}
-
-    public static PlaySoundtwo(string noise)
+    public static void PreLoad()
     {
-        // noise does nothing at the moment
-        NoisePlay = true;
-        ToggleChange = true;
-
-        
-        //Check to see if you just set the toggle to positive
-        if (NoisePlay == true && m_ToggleChange == true)
+        sounds = new Dictionary<string, AudioClip>();
+        foreach(var v in Resources.LoadAll<AudioClip>("Sounds/"))
         {
-            //Play the audio you attach to the AudioSource component
-            NoiseSource.Play();
-            //Ensure audio doesn’t play more than once
-            m_ToggleChange = false;
-        }
-        //Check if you just set the toggle to false
-        if (NoisePlay == false && m_ToggleChange == true)
-        {
-            //Stop the audio
-            NoiseSource.Stop();
-            //Ensure audio doesn’t play more than once
-            m_ToggleChange = false;
-        }
-
-        return null;
+            sounds[v.name] = v;
+        } 
     }
+
+    public static void PlaySound(string noise)
+    {
+        audioSource.PlayOneShot(sounds[noise]);
+    }
+
+    
 
 }

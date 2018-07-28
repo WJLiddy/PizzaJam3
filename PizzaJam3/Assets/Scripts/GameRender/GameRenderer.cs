@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class GameRenderer : MonoBehaviour
 {
     public GameObject dfloats;
+    public BuildPanel bp;
     GameState gs;
     public static readonly float TICK_TIME = 0.5f;
     public TileRenderer tr;
@@ -31,6 +32,10 @@ public class GameRenderer : MonoBehaviour
         gs.player.gun1 = (new M1911()).spawn(0.5f);
         gs.player.gun2 = (new MP5()).spawn(0.5f);
 
+        bp.gs = gs;
+
+        Sound.audioSource = pr.gameObject.AddComponent<AudioSource>();
+        Sound.PreLoad();
     }
 
     public void AddBullet(Gun.FiredProjectile fp, float base_angle_deg, Vector2 start)
