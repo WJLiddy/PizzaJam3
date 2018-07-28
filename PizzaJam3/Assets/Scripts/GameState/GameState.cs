@@ -125,7 +125,7 @@ public class GameState
         {
             for (int y = 0; y != dim_; ++y)
             {
-                if (tiles_[x, y] != null && tiles_[x, y] is Robot)
+                if (tiles_[x, y] != null && tiles_[x, y] is Robot && time_hr > 5 && time_hr < 21)
                 {
                     (tiles_[x, y] as Robot).doRobotAI(new IntVec2(x, y), this);
                 }
@@ -241,9 +241,33 @@ public class GameState
             time_min -= 60;
             time_hr++;
         }
-        if(time_hr > 24)
+        if(time_hr > 23)
         {
             time_hr = 0;
+        }
+    }
+
+    public void resourceCount(out int wood, out int ore, out int oil)
+    {
+        oil = 0;
+        wood = 0;
+        ore = 0;
+        for (int i = 0; i != dim_; ++i)
+        {
+            for (int j = 0; j != dim_; ++j)
+            {
+                if(getItem(new IntVec2(i,j)) != null && getItem(new IntVec2(i, j)) is Storage)
+                {
+                    switch ((getItem(new IntVec2(i, j)) as Storage).type)
+                    {
+                        case Resource.Type.OIL: oil += (getItem(new IntVec2(i, j)) as Storage).amount; break;
+                        case Resource.Type.WOOD: wood += (getItem(new IntVec2(i, j)) as Storage).amount; break;
+                        case Resource.Type.ORE: ore += (getItem(new IntVec2(i, j)) as Storage).amount; break;
+                    }
+
+                }
+
+            }
         }
     }
 }

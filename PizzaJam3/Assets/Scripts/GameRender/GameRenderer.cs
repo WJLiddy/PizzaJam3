@@ -12,6 +12,7 @@ public class GameRenderer : MonoBehaviour
     public PlayerRenderer pr;
     public Light l;
     public Text time;
+    public Text resourceText;
     float tick_time_left;
 
     // Use this for initialization
@@ -44,6 +45,13 @@ public class GameRenderer : MonoBehaviour
         return hr - 12 + ":" + min.ToString("00") + "PM";
     }
 
+    public void updateResourceCount()
+    {
+        int w, o, l;
+        gs.resourceCount(out w, out o, out l);
+        resourceText.text = "Wood " + w + "\nOre " + o + "\nOil" + l;
+    }
+
 
     // Update is called once per frame
     // Update is called once per frame
@@ -59,6 +67,7 @@ public class GameRenderer : MonoBehaviour
             tick_time_left = TICK_TIME;
             l.color = getLighting(gs.time_hr, gs.time_min);
             time.text = getTime(gs.time_hr, gs.time_min);
+            updateResourceCount();
         }
     }
 
