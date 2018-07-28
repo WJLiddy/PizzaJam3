@@ -22,7 +22,7 @@ public class TileRenderer : MonoBehaviour
                 GameObject grass = Instantiate(Resources.Load<GameObject>("generic_tile_item"));
                 grass.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("grass");
                 grass.transform.SetParent(this.transform);
-                grass.transform.localPosition = new Vector3(x, y, 2);
+                grass.transform.localPosition = new Vector3(x, y, 0.01f);
 
                 GameObject sprite = Instantiate(Resources.Load<GameObject>("generic_tile_item"));
                 Sprite s = null;

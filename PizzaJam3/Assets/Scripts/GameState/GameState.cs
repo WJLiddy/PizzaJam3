@@ -45,11 +45,16 @@ public class IntVec2
 public class GameState
 {
     public static readonly float TREE_THRESH = 0.7f;
+    public static readonly int minutes_per_tick = 5;
     public int dim_;
     public TileItem[,] tiles_;
+
+    public int time_hr;
+    public int time_min;
     // Players start at north west, baddies in south east.
     public GameState(int dim)
     {
+      time_hr = 8;
        dim_ = dim;
        tiles_ = new TileItem[dim,dim];
        addTrees();
@@ -228,6 +233,17 @@ public class GameState
                 }
             }
         }
-    }
 
+        time_min += minutes_per_tick;
+
+        if(time_min > 59)
+        {
+            time_min -= 60;
+            time_hr++;
+        }
+        if(time_hr > 24)
+        {
+            time_hr = 0;
+        }
+    }
 }

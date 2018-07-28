@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameRenderer : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class GameRenderer : MonoBehaviour
     public static readonly float TICK_TIME = 0.1f;
     public TileRenderer tr;
     public PlayerRenderer pr;
+    public Light l;
+    public Text time;
     float tick_time_left;
 
     // Use this for initialization
@@ -24,6 +27,24 @@ public class GameRenderer : MonoBehaviour
 
     }
 
+    string getTime(int hr, int min)
+    {
+        if(hr < 1)
+        {
+            return "12:" + min.ToString("00") + " AM";
+        }
+        if(hr < 12)
+        {
+            return hr + ":" + min.ToString("00") + " AM";
+        }
+        if(hr == 12)
+        {
+            return hr + ":" + min.ToString("00") + " PM";
+        }
+        return hr - 12 + ":" + min.ToString("00") + "PM";
+    }
+
+
     // Update is called once per frame
     // Update is called once per frame
     void Update()
@@ -31,11 +52,42 @@ public class GameRenderer : MonoBehaviour
 
         tick_time_left -= Time.deltaTime;
         if (tick_time_left < 0)
-        {
+        { 
             gs.process();
             gs.tick();
             tr.DrawState(gs);
             tick_time_left = TICK_TIME;
+            l.color = getLighting(gs.time_hr, gs.time_min);
+            time.text = getTime(gs.time_hr, gs.time_min);
         }
+    }
+
+    public Color getLighting(int hr, int min)
+    {
+        //5 to 7 am
+        //8 to 10 pm
+        if(hr < 5)
+        {
+            return Color.black;
+        }
+        if(hr < 7)
+        {
+            float pct = 1 - ((7f - ((float)hr + (float)min / 60)) / 2);
+            return new Color(pct, Mathf.Pow(pct, 2), Mathf.Pow(pct, 3));
+        } 
+        if(hr < 20)
+        {
+            return Color.white;
+        }
+        if(hr < 22)
+        {
+            float pct = ((22f - ((float)hr + (float)min / 60)) / 2);
+            return new Color(Mathf.Pow(pct, 3), Mathf.Pow(pct, 2), pct);
+        }
+        if(hr < 24)
+        {
+            return Color.black;
+        }
+        return Color.black;
     }
 }
