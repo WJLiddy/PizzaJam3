@@ -45,7 +45,6 @@ public class IntVec2
 public class GameState
 {
     public static readonly float TREE_THRESH = 0.7f;
-    public static readonly float TICK_TIME = 1f;
     public int dim_;
     public TileItem[,] tiles_;
     // Players start at north west, baddies in south east.
@@ -121,9 +120,9 @@ public class GameState
         {
             for (int y = 0; y != dim_; ++y)
             {
-                if (tiles_[x, y] != null && tiles_[x, y] is HarvesterRobot)
+                if (tiles_[x, y] != null && tiles_[x, y] is Robot)
                 {
-                    (tiles_[x, y] as HarvesterRobot).doRobotAI(new IntVec2(x, y), this);
+                    (tiles_[x, y] as Robot).doRobotAI(new IntVec2(x, y), this);
                 }
             }
         }
@@ -136,26 +135,29 @@ public class GameState
             tiles_[iv.x, iv.y] = ti;
             return;
         }
-        while(true)
+
+        int range = 1;
+        while (true)
         {
-            int range = 1;
-            for(int x = -range; x != range; ++x)
+            for(int x = -range; x <= range; ++x)
             {
-                for(int y = -range; y != range; ++y)
+                for(int y = -range; y <= range; ++y)
                 {
                     IntVec2 niv = new IntVec2(iv.x + x, iv.y + y);
-                    if (getItem(niv) == null && !isOOB(niv))
+                    if (!isOOB(niv) && getItem(niv) == null)
                     {
-                        tiles_[iv.x, iv.y] = ti;
+                        tiles_[iv.x + x, iv.y + y] = ti;
+                        return;
                     }
                 }
             }
+            range++;
         }
     }
 
     public bool tileWouldBeOccupied(int x, int y)
     {
-        if(tiles_[x,y] != null || isOOB(new IntVec2(x,y)))
+        if(isOOB(new IntVec2(x, y)) || tiles_[x,y] != null)
         {
             return true;
         }
@@ -164,8 +166,13 @@ public class GameState
         {
             for (int dy = -1; dy != 2; ++dy)
             {
+                if (isOOB(new IntVec2(dx+x, dy+y)) || tiles_[dx+x, dy+y] == null)
+                {
+                    continue;
+                }
+
                 TileItem t = (tiles_[x + dx, y + dy]);
-                if(t != null && t is TileUnit)
+                if(t is TileUnit)
                 {
                     if ((t as TileUnit).anim == TileUnit.Animation.MOVE && (t as TileUnit).animDir.Equals(new IntVec2(-dx, -dy)))
                         return true;
@@ -185,15 +192,24 @@ public class GameState
             {
                 tiles_[x, y] = null;
                 tiles_[new_pos.x, new_pos.y] = tu;
-                tu.anim = TileUnit.Animation.IDLE;
             }
         }
 
         if(tu.anim == TileUnit.Animation.HARVEST && tu is HarvesterRobot)
         {
-            tiles_[x + tu.animDir.x, y + tu.animDir.y] = null;
-            placeItemNear(new ExtractedResource((tu as HarvesterRobot).type, 50), new IntVec2(x + tu.animDir.x, y + tu.animDir.y));
+            (tu as HarvesterRobot).extract(this, new IntVec2(x + tu.animDir.x, y + tu.animDir.y));
         }
+
+        if (tu.anim == TileUnit.Animation.COLLECT && tu is CollectorRobot)
+        {
+            (tu as CollectorRobot).collect(this, new IntVec2(x + tu.animDir.x, y + tu.animDir.y));
+        }
+
+        if (tu.anim == TileUnit.Animation.STORE && tu is CollectorRobot)
+        {
+            (tu as CollectorRobot).deposit(this, new IntVec2(x + tu.animDir.x, y + tu.animDir.y));
+        }
+        tu.anim = TileUnit.Animation.IDLE;
     }
 
     public void tick()

@@ -20,12 +20,12 @@ public class Resource : TileItem
 
     private static Resource makeTree()
     {
-        return new Resource(Type.WOOD, 50);
+        return new Resource(Type.WOOD, 200);
     }
 
     private static Resource makeOre()
     {
-        return new Resource(Type.ORE, 0 * (int)Random.Range(1, 5));
+        return new Resource(Type.ORE, 40 * (int)Random.Range(1, 5));
     }
 
     private static Resource makeOil()

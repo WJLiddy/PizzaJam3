@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HarvesterRobot : TileUnit
+public class HarvesterRobot : TileUnit, Robot
 {
     public Resource.Type type;
+    public int amountExtracted;
+    public int capacity = 50;
 
     public HarvesterRobot(Resource.Type rt)
     {
@@ -48,6 +51,31 @@ public class HarvesterRobot : TileUnit
             }
         }
         return null;
+    }
+
+    public void extract(GameState gs, IntVec2 pos)
+    {
+
+        Resource r = (gs.getItem(pos) != null && gs.getItem(pos) is Resource) ? (gs.getItem(pos) as Resource) : null;
+        if(r == null || r.type != type)
+        {
+            return;
+        }
+
+        int to_extract = Math.Min(r.amount, 10);
+        amountExtracted += to_extract;
+        r.amount -= to_extract;
+        if(r.amount == 0)
+        {
+            gs.tiles_[pos.x, pos.y] = null;
+        }
+
+        if(amountExtracted >= capacity)
+        {
+            gs.placeItemNear(new ExtractedResource(type, amountExtracted), pos);
+            amountExtracted = 0;
+        }
+    
     }
 
     // Returns current animation for this gamestate (and the next can be implied from there).

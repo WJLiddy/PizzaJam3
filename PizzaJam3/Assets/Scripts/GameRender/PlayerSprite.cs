@@ -8,6 +8,8 @@ public class PlayerSprite : MonoBehaviour
     float speedmod = 3.0f;
     float animTime = 0.5f;
     float animTimeMax = 0.5f;
+    float cbox_radius = 0.2f;
+
     GameState gs;
     Dictionary<string, Sprite> sprs = new Dictionary<string, Sprite>();
 	// Use this for initialization
@@ -19,11 +21,24 @@ public class PlayerSprite : MonoBehaviour
         }
 	}
 
-    void setGameState(GameState gs)
+    public void setGameState(GameState gs)
     {
         this.gs = gs;
     }
 	
+    public bool wouldCollide()
+    {
+        Vector2 lp = transform.localPosition;
+        if(lp.x - cbox_radius < 0 || lp.y - cbox_radius < 0)
+        {
+            return true;
+        }
+        return
+            gs.tileWouldBeOccupied((int)(lp.x - cbox_radius), (int)(lp.y - cbox_radius)) ||
+            gs.tileWouldBeOccupied((int)(lp.x - cbox_radius), (int)(lp.y + cbox_radius)) ||
+            gs.tileWouldBeOccupied((int)(lp.x + cbox_radius), (int)(lp.y + cbox_radius)) ||
+            gs.tileWouldBeOccupied((int)(lp.x + cbox_radius), (int)(lp.y - cbox_radius));
+    }
 	// Update is called once per frame
 	void Update ()
     {
@@ -93,7 +108,11 @@ public class PlayerSprite : MonoBehaviour
             animTime = 0;
         }
 
-        if(gs.)
+        if(wouldCollide())
+        {
+            transform.localPosition = old;
+        }
+       
         
         Camera.main.transform.position = new Vector3(transform.position.x,transform.position.y,Camera.main.transform.position.z);
     }

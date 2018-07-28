@@ -41,20 +41,31 @@ public class TileRenderer : MonoBehaviour
         {
             for(int y = 0; y != gs.dim_; y++)
             {
-                if(gs.tiles_[x,y] == null)
+                if (gs.tiles_[x, y] == null)
                 {
                     tiles[x, y].GetComponent<SpriteRenderer>().sprite = null;
-                } else if (gs.tiles_[x,y] is Resource)
+                }
+                else if (gs.tiles_[x, y] is Resource)
                 {
-                    renderResource(gs.tiles_[x,y] as Resource, x, y);
-                } else if (gs.tiles_[x,y] is HarvesterRobot)
+                    renderResource(gs.tiles_[x, y] as Resource, x, y);
+                }
+                else if (gs.tiles_[x, y] is HarvesterRobot)
                 {
                     renderRobot(gs.tiles_[x, y] as HarvesterRobot, x, y);
-                } else if (gs.tiles_[x,y] is ExtractedResource)
+                }
+                else if (gs.tiles_[x, y] is CollectorRobot)
+                {
+                    renderCollectorRobot(gs.tiles_[x, y] as CollectorRobot, x, y);
+                }
+                else if (gs.tiles_[x, y] is ExtractedResource)
                 {
                     renderExtractedResource(gs.tiles_[x, y] as ExtractedResource, x, y);
                 }
-                
+                else if (gs.tiles_[x, y] is Storage)
+                {
+                    renderStorage(gs.tiles_[x, y] as Storage, x, y);
+                }
+
             }
         }
 
@@ -72,9 +83,21 @@ public class TileRenderer : MonoBehaviour
         tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
     }
 
+    void renderStorage(Storage r, int x, int y)
+    {
+        Sprite s = null;
+        switch (r.type)
+        {
+            case Resource.Type.OIL: s = Resources.Load<Sprite>("Resource/refinery"); break;
+            case Resource.Type.ORE: s = Resources.Load<Sprite>("Resource/forge"); break;
+            case Resource.Type.WOOD: s = Resources.Load<Sprite>("Resource/sawmill"); break;
+             }
+        tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
+    }
 
 
-    void renderResource(Resource r,int x, int y)
+
+void renderResource(Resource r,int x, int y)
     {
   
         Sprite s = null;
@@ -95,6 +118,18 @@ public class TileRenderer : MonoBehaviour
             case Resource.Type.OIL: s = Resources.Load<Sprite>("Robot/drillbot"); break;
             case Resource.Type.ORE: s = Resources.Load<Sprite>("Robot/minebot"); break;
             case Resource.Type.WOOD: s = Resources.Load<Sprite>("Robot/axebot"); break;
+        }
+        tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
+    }
+
+    void renderCollectorRobot(CollectorRobot r, int x, int y)
+    {
+        Sprite s = null;
+        switch (r.type)
+        {
+            case Resource.Type.OIL: s = Resources.Load<Sprite>("Robot/oilcollectorbot"); break;
+            case Resource.Type.ORE: s = Resources.Load<Sprite>("Robot/orecollectorbot"); break;
+            case Resource.Type.WOOD: s = Resources.Load<Sprite>("Robot/woodcollectorbot"); break;
         }
         tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
     }
