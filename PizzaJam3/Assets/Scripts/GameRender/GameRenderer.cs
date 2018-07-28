@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class GameRenderer : MonoBehaviour
 {
     GameState gs;
-
-    public static readonly float TICK_TIME = 0.1f;
+    public List<GameObject> bullets;
+    public static readonly float TICK_TIME = 1f;
     public TileRenderer tr;
     public PlayerRenderer pr;
     public Light l;
@@ -25,6 +25,11 @@ public class GameRenderer : MonoBehaviour
         gs.tiles_[2, 0] = new Storage(Resource.Type.WOOD);
         tr.Setup(gs);
         pr.addPlayer(gs);
+
+    }
+
+    public void AddBullet(Gun.FiredProjectile fp)
+    {
 
     }
 

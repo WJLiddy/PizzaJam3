@@ -10,6 +10,8 @@ public class PlayerSprite : MonoBehaviour
     float animTimeMax = 0.5f;
     float cbox_radius = 0.2f;
 
+    bool did_fire_last_frame = false;
+
     GameState gs;
     Dictionary<string, Sprite> sprs = new Dictionary<string, Sprite>();
 	// Use this for initialization
@@ -115,5 +117,23 @@ public class PlayerSprite : MonoBehaviour
        
         
         Camera.main.transform.position = new Vector3(transform.position.x,transform.position.y,Camera.main.transform.position.z);
+    }
+
+    //renderer has to handle bullets.
+    public void shootGun(GameState gs, int gno)
+    {
+        Player p = gs.player;
+        Gun g = (gno == 0 ? p.gun1 : p.gun2);
+        if (!g.isFullAuto() && did_fire_last_frame)
+        {
+            return;
+        }
+
+        if (g.getCapacity() > 0)
+        {
+            var v = g.fireGun();
+            
+
+        }
     }
 }

@@ -6,8 +6,10 @@ public class Projectile
 {
     public enum ProjectileType
     {
-        MusketBall, // Low damage, average projectile size
-        CannonBall, // High damage, huge
-        Fletchette, // Add more               
+                    //  DAMAGE   |   SIZE   |   AIR RES.
+        MusketBall, //   Med         Med        Med
+        CannonBall, //   High        Big        High
+        Fletchette, //   Low         Small      High
+        Bullet,     //   Low         Small      Low
     }
 }

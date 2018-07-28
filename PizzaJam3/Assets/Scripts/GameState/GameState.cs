@@ -48,13 +48,14 @@ public class GameState
     public static readonly int minutes_per_tick = 5;
     public int dim_;
     public TileItem[,] tiles_;
+    public Player player;
 
     public int time_hr;
     public int time_min;
     // Players start at north west, baddies in south east.
     public GameState(int dim)
     {
-      time_hr = 8;
+       time_hr = 8;
        dim_ = dim;
        tiles_ = new TileItem[dim,dim];
        addTrees();
