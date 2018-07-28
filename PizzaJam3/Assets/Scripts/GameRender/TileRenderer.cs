@@ -5,35 +5,37 @@ using UnityEngine;
 public class TileRenderer : MonoBehaviour
 {
     GameObject[,] tiles;
-    GameState gs;
     // Use this for initialization
-    void Start ()
+    public void Setup (GameState gs)
     {
-        gs = new GameState(30);
         tiles = new GameObject[gs.dim_, gs.dim_];
-        gs.addClearing(new IntVec2(0, 0), 10);
-        gs.tiles_[0, 0] = new HarvesterRobot(Resource.Type.WOOD);
-        prepareTiles();
+        prepareTiles(gs.dim_);
         DrawState(gs);
 	}
 
-    void prepareTiles()
+    void prepareTiles(int dim)
     {
-        for (int x = 0; x != gs.dim_; x++)
+        for (int x = 0; x != dim; x++)
         {
-            for (int y = 0; y != gs.dim_; y++)
+            for (int y = 0; y != dim; y++)
             {
+                GameObject grass = Instantiate(Resources.Load<GameObject>("generic_tile_item"));
+                grass.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("grass");
+                grass.transform.SetParent(this.transform);
+                grass.transform.localPosition = new Vector3(x, y, 2);
+
                 GameObject sprite = Instantiate(Resources.Load<GameObject>("generic_tile_item"));
                 Sprite s = null;
                 sprite.GetComponent<SpriteRenderer>().sprite = s;
                 sprite.transform.SetParent(this.transform);
                 sprite.transform.localPosition = new Vector2(x, y);
                 tiles[x, y] = sprite;
+
             }
         }
     }
 
-    void DrawState(GameState gs)
+    public void DrawState(GameState gs)
     {
         for(int x = 0; x != gs.dim_; x++)
         {
@@ -41,7 +43,7 @@ public class TileRenderer : MonoBehaviour
             {
                 if(gs.tiles_[x,y] == null)
                 {
-                    renderGrass(x, y);
+                    tiles[x, y].GetComponent<SpriteRenderer>().sprite = null;
                 } else if (gs.tiles_[x,y] is Resource)
                 {
                     renderResource(gs.tiles_[x,y] as Resource, x, y);
@@ -95,20 +97,5 @@ public class TileRenderer : MonoBehaviour
             case Resource.Type.WOOD: s = Resources.Load<Sprite>("Robot/axebot"); break;
         }
         tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
-    }
-
-
-    void renderGrass(int x, int y)
-    {
-        Sprite s =  Resources.Load<Sprite>("grass");
-        tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
-    }
-
-    // Update is called once per frame
-    void Update ()
-    {
-        gs.process();
-        gs.tick();
-        DrawState(gs);
     }
 }

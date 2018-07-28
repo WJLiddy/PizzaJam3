@@ -45,7 +45,7 @@ public class IntVec2
 public class GameState
 {
     public static readonly float TREE_THRESH = 0.7f;
-
+    public static readonly float TICK_TIME = 1f;
     public int dim_;
     public TileItem[,] tiles_;
     // Players start at north west, baddies in south east.
@@ -151,6 +151,28 @@ public class GameState
                 }
             }
         }
+    }
+
+    public bool tileWouldBeOccupied(int x, int y)
+    {
+        if(tiles_[x,y] != null || isOOB(new IntVec2(x,y)))
+        {
+            return true;
+        }
+
+        for (int dx = -1; dx != 2; ++dx)
+        {
+            for (int dy = -1; dy != 2; ++dy)
+            {
+                TileItem t = (tiles_[x + dx, y + dy]);
+                if(t != null && t is TileUnit)
+                {
+                    if ((t as TileUnit).anim == TileUnit.Animation.MOVE && (t as TileUnit).animDir.Equals(new IntVec2(-dx, -dy)))
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void handleUnitTick(int x, int y, TileUnit tu)
