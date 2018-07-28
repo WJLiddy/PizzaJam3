@@ -20,11 +20,13 @@ public class TileRenderer : MonoBehaviour
             for (int y = 0; y != dim; y++)
             {
                 GameObject grass = Instantiate(Resources.Load<GameObject>("generic_tile_item"));
+                grass.name = "grass";
                 grass.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("grass");
                 grass.transform.SetParent(this.transform);
                 grass.transform.localPosition = new Vector3(x, y, 0.01f);
 
                 GameObject sprite = Instantiate(Resources.Load<GameObject>("generic_tile_item"));
+                sprite.name = x + "," + y;
                 Sprite s = null;
                 sprite.GetComponent<SpriteRenderer>().sprite = s;
                 sprite.transform.SetParent(this.transform);

@@ -105,4 +105,12 @@ public class HarvesterRobot : TileUnit, Robot
             }
         }
     }
+    public override int getMaxHP()
+    {
+        return 10;
+    }
+    public override bool isFriendly()
+    {
+        return true;
+    }
 }

@@ -117,10 +117,10 @@ public class PlayerSprite : MonoBehaviour
             return true;
         }
         return
-            gs.tileWouldBeOccupied((int)(lp.x - cbox_radius), (int)(lp.y - cbox_radius)) ||
-            gs.tileWouldBeOccupied((int)(lp.x - cbox_radius), (int)(lp.y + cbox_radius)) ||
-            gs.tileWouldBeOccupied((int)(lp.x + cbox_radius), (int)(lp.y + cbox_radius)) ||
-            gs.tileWouldBeOccupied((int)(lp.x + cbox_radius), (int)(lp.y - cbox_radius));
+            gs.tileWouldBeOccupied((int)(0.5f + lp.x - cbox_radius), (int)(0.5f + lp.y - cbox_radius)) ||
+            gs.tileWouldBeOccupied((int)(0.5f + lp.x - cbox_radius), (int)(0.5f + lp.y + cbox_radius)) ||
+            gs.tileWouldBeOccupied((int)(0.5f + lp.x + cbox_radius), (int)(0.5f + lp.y + cbox_radius)) ||
+            gs.tileWouldBeOccupied((int)(0.5f + lp.x + cbox_radius), (int)(0.5f + lp.y - cbox_radius));
     }
 	// Update is called once per frame
 	void Update ()

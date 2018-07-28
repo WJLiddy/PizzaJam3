@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileUnit : TileItem
+public abstract class TileUnit : TileItem
 {
+    public abstract bool isFriendly();
     public enum Animation
     {
         MOVE,
@@ -17,6 +18,24 @@ public class TileUnit : TileItem
     public Animation anim;
     public IntVec2 animDir;
     private int HP;
+    public abstract int getMaxHP();
+
+    public TileUnit()
+    {
+        HP = getMaxHP();
+    }
+
+    public void hurt(int dmg, out bool dead)
+    {
+        HP -= dmg;
+        if(HP <= 0)
+        {
+            dead = true;
+        } else
+        {
+            dead = false;
+        }
+    }
 
     public static List<IntVec2> getPath(IntVec2 start, IntVec2 end, GameState gs)
     {

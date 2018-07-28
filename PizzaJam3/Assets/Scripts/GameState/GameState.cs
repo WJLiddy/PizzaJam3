@@ -120,6 +120,27 @@ public class GameState
         }
     }
 
+    public bool hurt(int x, int y, int dmg, out bool stop)
+    {
+        stop = false;
+        if (getItem(new IntVec2(x, y)) != null)
+        {
+            stop = true;
+        }
+
+        if (getItem(new IntVec2(x,y)) != null && getItem(new IntVec2(x, y)) is TileUnit)
+        {
+            bool ded = false;
+            (getItem(new IntVec2(x, y)) as TileUnit).hurt(dmg, out ded);
+            if(ded)
+            {
+                tiles_[x, y] = null;
+            }
+            return true;
+        }
+        return false;
+    }
+
     public void process()
     {
         for (int x = 0; x != dim_; ++x)
@@ -129,6 +150,11 @@ public class GameState
                 if (tiles_[x, y] != null && tiles_[x, y] is Robot && time_hr > 5 && time_hr < 21)
                 {
                     (tiles_[x, y] as Robot).doRobotAI(new IntVec2(x, y), this);
+                }
+
+                if (tiles_[x, y] != null && tiles_[x, y] is Baddie)
+                {
+                    (tiles_[x, y] as Baddie).doAI(new IntVec2(x, y), this);
                 }
             }
         }

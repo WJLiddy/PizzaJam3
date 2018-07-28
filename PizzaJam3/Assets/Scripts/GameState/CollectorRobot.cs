@@ -114,4 +114,14 @@ public class CollectorRobot : TileUnit, Robot
             gs.tiles_[pos.x, pos.y] = null;
         }
     }
+
+    public override int getMaxHP()
+    {
+        return 10;
+    }
+
+    public override bool isFriendly()
+    {
+        return true;
+    }
 }

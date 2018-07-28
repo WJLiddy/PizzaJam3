@@ -1,13 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RenderBullet : MonoBehaviour
 {
     public bool is_enemy_bullet;
+    public GameState gs;
+    public GameRenderer gr;
     public bool is_crit;
     public float range;
     public Vector2 start;
+    int dmg = 10;
     bool startSet = false;
 
     public void Update()
@@ -23,8 +27,23 @@ public class RenderBullet : MonoBehaviour
         }
     }
     // See what the other object is. If it's a 
-    private void OnTriggerCollide(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.name.Contains(","))
+        {
+            int x = Convert.ToInt32(other.name.Split(',')[0]);
+            int y = Convert.ToInt32(other.name.Split(',')[1]);
+            bool stop;
+            bool damaged = gs.hurt(x,y,dmg, out stop);
+            if(damaged)
+            {
+                gr.addDFloat(transform.localPosition, dmg);
+            }
+            if(stop)
+            {
+                Destroy(this.gameObject);
+            }
+        }
             // get name. it will be a coordinate (x,y) or the player which we can look up and handle accordingly
     }
 }

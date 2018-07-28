@@ -28,7 +28,7 @@ public class M1911 : Gun
         b.is_crit = UnityEngine.Random.Range(0f, 1f) < crit_chance;
         b.projectile = Projectile.ProjectileType.Bullet;
         b.range = range;
-        b.speed = 2f;
+        b.speed = 5f;
         fp.Add(b);
         return fp;
     }

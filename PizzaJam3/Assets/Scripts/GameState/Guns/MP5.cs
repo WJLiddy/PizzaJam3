@@ -18,7 +18,7 @@ public class MP5 : Gun
         m.capacity = 25 + (int)(rarity / 0.05f); //up to 20 extra bullets
         m.burst_size = 3 + (int)UnityEngine.Random.Range(0f, 3f * rarity); //may shoot 4 or 5 bullets if rare
         // all mp5s have bad spread, rare ones mabye less.
-        spread = 15 - (7 * UnityEngine.Random.Range(0f, rarity));
+        m.spread = 15 - (7 * UnityEngine.Random.Range(0f, rarity));
         return m;
     }
 
@@ -41,7 +41,7 @@ public class MP5 : Gun
             }
 
             b.range = range;
-            b.speed = 1.5f;
+            b.speed = 3f + Random.Range(0f,2f);
             fp.Add(b);
         }
         return fp;

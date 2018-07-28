@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameRenderer : MonoBehaviour
 {
+    public GameObject dfloats;
     GameState gs;
-    public static readonly float TICK_TIME = 1f;
+    public static readonly float TICK_TIME = 0.5f;
     public TileRenderer tr;
     public PlayerRenderer pr;
     public Light l;
@@ -27,7 +29,7 @@ public class GameRenderer : MonoBehaviour
         pr.addPlayer(gs);
         pr.p.gr = this; //disgusting
         gs.player.gun1 = (new M1911()).spawn(0.5f);
-        gs.player.gun2 = (new M1911()).spawn(0.5f);
+        gs.player.gun2 = (new MP5()).spawn(0.5f);
 
     }
 
@@ -39,7 +41,19 @@ public class GameRenderer : MonoBehaviour
         go.GetComponent<Rigidbody2D>().velocity = new Vector3(fp.speed * Mathf.Cos(ang * Mathf.Deg2Rad), fp.speed * Mathf.Sin(ang * Mathf.Deg2Rad));
         go.GetComponent<RenderBullet>().is_crit = fp.is_crit;
         go.GetComponent<RenderBullet>().range =  fp.range;
+        go.GetComponent<RenderBullet>().gs = gs;
+        go.GetComponent<RenderBullet>().gr = this;
         go.transform.localPosition = start;
+    }
+
+    internal void addDFloat(Vector3 localPosition, int dmg)
+    {
+
+        GameObject go = Instantiate(Resources.Load<GameObject>("d_float"));
+        go.GetComponent<TextFadeOut>().text = "" + dmg;
+        go.transform.SetParent(dfloats.transform);
+        go.transform.localPosition = localPosition;
+
     }
 
     string getTime(int hr, int min)
@@ -63,7 +77,7 @@ public class GameRenderer : MonoBehaviour
     {
         int w, o, l;
         gs.resourceCount(out w, out o, out l);
-        resourceText.text = "Wood " + w + "\nOre " + o + "\nOil" + l;
+        resourceText.text = "Wood " + w + "\nOre " + o + "\nOil " + l;
     }
 
 
