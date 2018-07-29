@@ -41,6 +41,7 @@ public class GameRenderer : MonoBehaviour
         pr.p.gr = this; //disgusting
         gs.player.gun1 = (new RPG()).spawn(0.5f);
         gs.player.gun2 = (new PumpShotgun()).spawn(1f);
+        gs.time_hr = 19;
 
         bp.gs = gs;
 
@@ -59,9 +60,25 @@ public class GameRenderer : MonoBehaviour
         {
             bItem1.SetActive(true);
             bItem2.SetActive(true);
-            bItem1.GetComponentInChildren<Text>().text = "Make [H]arvester";
-            bItem2.GetComponentInChildren<Text>().text = "Make [C]ollector";
+            bItem1.GetComponentInChildren<Text>().text = "Make Harvester";
+            bItem2.GetComponentInChildren<Text>().text = "Make Collector";
         } else
+        if(tu is GuardTower)
+        {
+            bItem1.SetActive(gs.player.gun1 != null);
+            if (gs.player.gun1 != null)
+            {
+                bItem1.GetComponentInChildren<Text>().text = "Attach " + gs.player.gun1.getName();
+            }
+
+            bItem2.SetActive(gs.player.gun2 != null);
+            if (gs.player.gun2 != null)
+            {
+                bItem2.GetComponentInChildren<Text>().text = "Attach " + gs.player.gun2.getName();
+            }
+        }
+
+        else
         {
             hideOptions();
         }
@@ -188,6 +205,7 @@ public class GameRenderer : MonoBehaviour
 
     public void runOption(int opt)
     {
+        Player p = gs.player;
         IntVec2 v = pr.p.getLookAt();
         TileItem t = gs.getItem(v);
         if (t is Storage)
@@ -200,6 +218,28 @@ public class GameRenderer : MonoBehaviour
             if(opt == 2)
             {
                 gs.placeItemNear(new CollectorRobot((t as Storage).type), v);
+            }
+        }
+
+        if(t is GuardTower)
+        {
+            GuardTower gt = t as GuardTower;
+            if(opt == 1)
+            {
+                if(gt.storedGun == null && p.gun1 != null)
+                {
+                    gt.storedGun = p.gun1;
+                    p.gun1 = null;
+                }
+            }
+
+            if (opt == 2)
+            {
+                if (gt.storedGun == null && p.gun2 != null)
+                {
+                    gt.storedGun = p.gun2;
+                    p.gun2 = null;
+                }
             }
         }
     }

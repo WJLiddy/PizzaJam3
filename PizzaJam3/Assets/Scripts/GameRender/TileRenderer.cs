@@ -78,6 +78,10 @@ public class TileRenderer : MonoBehaviour
                 {
                     renderBuilding(gs.tiles_[x, y] as Building, x, y);
                 }
+                else if (gs.tiles_[x, y] is Baddie)
+                {
+                    renderBaddie(gs.tiles_[x, y] as Baddie, x, y);
+                }
 
             }
         }
@@ -111,6 +115,12 @@ public class TileRenderer : MonoBehaviour
             case Resource.Type.ORE: s = sd["ore_res"]; break;
             case Resource.Type.WOOD: s = sd["wood_res"]; break;
         }
+        tiles[x,y].GetComponent<SpriteRenderer>().sprite = s;
+    }
+
+    void renderBaddie(Baddie b, int x, int y)
+    {
+        Sprite s = sd["swarmer"];
         tiles[x,y].GetComponent<SpriteRenderer>().sprite = s;
     }
 

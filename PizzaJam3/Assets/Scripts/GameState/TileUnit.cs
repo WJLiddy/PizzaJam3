@@ -165,7 +165,7 @@ public abstract class TileUnit : TileItem
         fp.range = range;
         fp.speed = velocity;
 
-        gr.AddBullet(fp, Mathf.Atan2(this_pos.y - targetTile.y, this_pos.x - targetTile.x), new Vector2(this_pos.x, this_pos.y),allied);
+        gr.AddBullet(fp, Mathf.Rad2Deg *  Mathf.Atan2(targetTile.y - this_pos.y, targetTile.x - this_pos.x ), new Vector2(this_pos.x, this_pos.y),allied);
     }
 
 

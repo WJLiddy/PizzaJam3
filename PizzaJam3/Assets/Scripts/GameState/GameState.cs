@@ -275,6 +275,10 @@ public class GameState
             {
                 baddieSpawn(gr);
             }
+            if(time_hr == 6)
+            {
+                cleanBaddies();
+            }
         }
         if(time_hr > 23)
         {
@@ -309,6 +313,20 @@ public class GameState
     public bool flighthouse(TileItem t)
     {
         return (t is GuardTower);
+    }
+
+    public void cleanBaddies()
+    {
+        for(int x = 0; x != dim_; ++x)
+        {
+            for(int y = 0; y != dim_; ++y)
+            {
+                if(tiles_[x,y] is Baddie)
+                {
+                    tiles_[x, y] = null;
+                }
+            }
+        }
     }
     //Spawn 70 meters away from lighthouses.
     public void baddieSpawn(GameRenderer gr)
