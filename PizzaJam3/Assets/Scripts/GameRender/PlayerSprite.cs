@@ -119,10 +119,6 @@ public class PlayerSprite : MonoBehaviour
     public bool wouldCollide()
     {
         Vector2 lp = transform.localPosition;
-        if(lp.x - cbox_radius < 0 || lp.y - cbox_radius < 0)
-        {
-            return true;
-        }
         return
             gs.tileWouldBeOccupied((int)(0.5f + lp.x - cbox_radius), (int)(0.5f + lp.y - cbox_radius)) ||
             gs.tileWouldBeOccupied((int)(0.5f + lp.x - cbox_radius), (int)(0.5f + lp.y + cbox_radius)) ||
@@ -132,21 +128,34 @@ public class PlayerSprite : MonoBehaviour
 
     void updateItemSlot()
     {
-        gr.itemSlot1.GetComponentInChildren<Text>().text = gs.player.gun1.getName() + "\n" + 
-            ((reload_timer_1 > 0) ? "reloading" : gs.player.gun1.bulletsLeft + "/" + gs.player.gun1.getCapacity());
-        gr.itemSlot2.GetComponentInChildren<Text>().text = gs.player.gun2.getName() + "\n" +
+        if (gs.player.gun1 != null)
+        {
+            gr.itemSlot1.GetComponentInChildren<Text>().text = gs.player.gun1.getName() + "\n" +
+                ((reload_timer_1 > 0) ? "reloading" : gs.player.gun1.bulletsLeft + "/" + gs.player.gun1.getCapacity());
+        } else
+        {
+            gr.itemSlot1.GetComponentInChildren<Text>().text = "None";
+        }
+
+        if (gs.player.gun2 != null)
+        {
+            gr.itemSlot2.GetComponentInChildren<Text>().text = gs.player.gun2.getName() + "\n" +
             ((reload_timer_2 > 0) ? "reloading" : gs.player.gun2.bulletsLeft + "/" + gs.player.gun2.getCapacity());
+        } else
+        {
+            gr.itemSlot2.GetComponentInChildren<Text>().text = "None";
+        }
     }
 
     void gunHandler()
     {
-        if(Input.GetKeyDown("q") && reload_timer_1 <= 0)
+        if(Input.GetKeyDown("q") && reload_timer_1 <= 0 && gs.player.gun1 != null)
         {
             gs.player.gun1.bulletsLeft = gs.player.gun1.getCapacity();
             reload_timer_1 = gs.player.gun1.getReloadTime();
         }
 
-        if (Input.GetKeyDown("e") && reload_timer_2 <= 0)
+        if (Input.GetKeyDown("e") && reload_timer_2 <= 0 && gs.player.gun2 != null)
         {
             gs.player.gun2.bulletsLeft = gs.player.gun2.getCapacity();
             reload_timer_2 = gs.player.gun2.getReloadTime();
@@ -234,7 +243,7 @@ public class PlayerSprite : MonoBehaviour
     void optionsWatchdog()
     {
         IntVec2 lookat = getLookAt();
-        if(gs.getItem(lookat) != null)
+        if(!gs.isOOB(lookat) &&  gs.getItem(lookat) != null)
         {
             gr.showOptions(gs.getItem(lookat));
         } else
@@ -284,9 +293,16 @@ public class PlayerSprite : MonoBehaviour
                 {
                     return;
                 }
-                g.bulletsLeft--;
+                if (g.consumeMultipleAmmoPerFire())
+                {
+                    g.bulletsLeft--;
+                }
                 gun1_did_fire_last_frame = true;
                 gr.AddBullet(b, getMouseAngle(),this.transform.localPosition,true);
+            }
+            if (!g.consumeMultipleAmmoPerFire())
+            {
+                g.bulletsLeft--;
             }
         }
     }

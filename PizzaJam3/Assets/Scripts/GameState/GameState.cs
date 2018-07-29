@@ -165,6 +165,8 @@ public class GameState
 
     public void placeItemNear(TileItem ti, IntVec2 iv)
     {
+        var l = player.inTiles();
+
         if(getItem(iv) == null)
         {
             tiles_[iv.x, iv.y] = ti;
@@ -179,8 +181,9 @@ public class GameState
                 for(int y = -range; y <= range; ++y)
                 {
                     IntVec2 niv = new IntVec2(iv.x + x, iv.y + y);
-                    if (!isOOB(niv) && getItem(niv) == null)
+                    if (!isOOB(niv) && getItem(niv) == null && !l.Contains(niv))
                     {
+                        Debug.Log("PLACE: " +niv);
                         tiles_[iv.x + x, iv.y + y] = ti;
                         return;
                     }

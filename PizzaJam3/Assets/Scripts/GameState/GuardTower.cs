@@ -42,10 +42,18 @@ public class GuardTower : TileUnit, Robot, Building //This interface is FUCKED
                 {
                     return;
                 }
-                storedGun.bulletsLeft--;
+                if (storedGun.consumeMultipleAmmoPerFire())
+                {
+                    storedGun.bulletsLeft--;
+                }
                 shootProjectile(pos, b.projectile, v, b.speed, b.range,true);              
             }
+            if (!storedGun.consumeMultipleAmmoPerFire())
+            {
+                storedGun.bulletsLeft--;
+            }
         }
+
     }
 
     public override int getMaxHP()

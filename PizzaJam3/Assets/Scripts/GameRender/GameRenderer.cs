@@ -171,7 +171,12 @@ public class GameRenderer : MonoBehaviour
             updateResourceCount();
             towersUpdate(gs);
         }
-        
+
+        foreach (var v in gs.player.inTiles())
+        {
+            Debug.Log(v);
+        }
+
     }
 
     public Color getLighting(int hr, int min)

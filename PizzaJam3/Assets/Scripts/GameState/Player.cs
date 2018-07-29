@@ -14,11 +14,12 @@ public class Player : MonoBehaviour
     {
         var lp = location;
         HashSet<IntVec2> iv = new HashSet<IntVec2>();
-        iv.Add(new IntVec2((int)(lp.x - cbox_radius), (int)(lp.y - cbox_radius)));
-        iv.Add(new IntVec2((int)(lp.x - cbox_radius), (int)(lp.y + cbox_radius)));
-        iv.Add(new IntVec2((int)(lp.x + cbox_radius), (int)(lp.y - cbox_radius)));
-        iv.Add(new IntVec2((int)(lp.x + cbox_radius), (int)(lp.y + cbox_radius)));
+        iv.Add(new IntVec2((int)(lp.x + 0.5 + - cbox_radius), (int)(lp.y + 0.5 + - cbox_radius)));
+        iv.Add(new IntVec2((int)(lp.x + 0.5 + - cbox_radius), (int)(lp.y + 0.5 + cbox_radius)));
+        iv.Add(new IntVec2((int)(lp.x + 0.5 + cbox_radius), (int)(lp.y + 0.5 + - cbox_radius)));
+        iv.Add(new IntVec2((int)(lp.x + 0.5 + cbox_radius), (int)(lp.y + 0.5 + cbox_radius)));
         return iv;
     }
+
 
 }
