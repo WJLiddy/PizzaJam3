@@ -4,18 +4,31 @@ using UnityEngine;
 
 public class ShortyShotgun : Gun
 {
+<<<<<<< HEAD
+    public float crit_chance;
+    public int capacity;
+    public float range = 4;
+    public float reloadtime;
+    public float speed = 4;
+    public float spread;
+=======
     public override string getName()
     {
         return "Shorty Shotty";
     }
 
+>>>>>>> 4437c264d87a89bd6bf7682755dba2acef60d4a8
     public float jam_rate = 0.3f; // this should be high for this gun I assume this is 30% chance
 
     public override Gun spawn(float rarity)
     {
-        TightCannon c = new TightCannon();
-        c.jam_rate = (1f - rarity) / 30; // TODO: copied from m4. need to adjust not sure how this effects things
-        return c;
+        ShortyShotgun s = new ShortyShotgun();
+        s.crit_chance = rarity / 30f; // Worst gun never crits, best gun crits 30%
+        s.capacity = 4 + (int)(rarity / 0.1f); //up to 10 extra bullets
+        s.jam_rate = (1f - rarity) / 30; // TODO: copied from m4. need to adjust should be high
+        s.reloadtime = ((5 - (rarity / 0.2f)) * capacity); // should be based on how many shells have been fired
+        s.spread = 40 - (7 * UnityEngine.Random.Range(0f, rarity));
+        return s;
     }
 
     public override List<FiredProjectile> fireGun()
@@ -25,7 +38,7 @@ public class ShortyShotgun : Gun
         Gun.FiredProjectile b;
         b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
         b.is_crit = false;
-        b.projectile = Projectile.ProjectileType.Bullet;
+        b.projectile = Projectile.ProjectileType.Fletchette;
         b.range = 9; // TODO: also not sure what this effects, and speed should also be slower
         b.speed = 3f;
         // jams, wont fire.
@@ -38,18 +51,18 @@ public class ShortyShotgun : Gun
 
     public override int getCapacity()
     {
-        return 5;
+        return capacity;
     }
 
     public override float getReloadTime()
     {
-        return 3f; // TODO: could this be fast but is repeated based on (Capacity-RoundsRemaining)
+        return reloadtime; // TODO: could this be fast but is repeated based on (Capacity-RoundsRemaining)
     }
 
     //means time between shots
     public override float getROF()
     {
-        return 0.1f; // TODO: figure out how this looks in game but slower than this
+        return 0.4f; // TODO: figure out how this looks in game but slower than this
     }
 
     public override bool isFullAuto()

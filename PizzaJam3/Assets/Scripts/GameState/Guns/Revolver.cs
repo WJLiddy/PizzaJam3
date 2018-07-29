@@ -5,7 +5,11 @@ using UnityEngine;
 public class Revolver : Gun
 {
 
-    public float jam_rate = 0;
+    public float crit_chance;
+    public int capacity;
+    public float range;
+    public float reloadtime;
+    public float speed = 4f;
 
     public override string getName()
     {
@@ -15,9 +19,12 @@ public class Revolver : Gun
 
     public override Gun spawn(float rarity)
     {
-        TightCannon c = new TightCannon();
-        c.jam_rate = (1f - rarity) / 30; // TODO: copied from m4. need to adjust
-        return c;
+        Revolver r = new Revolver();
+        r.capacity = 5 + (int)(rarity / 0.2f); //up to 5 extra bullets
+        r.range = 4 + (int)UnityEngine.Random.Range(0f, 4 * rarity); // Chance of extended range if high crit chance.
+        r.reloadtime = 6 - (int)(rarity / 0.2f); //possible 1 sec reload over 6 for base
+        r.crit_chance = rarity / 20f; // Worst gun never crits, best gun crits 20%
+        return r;
     }
 
     public override List<FiredProjectile> fireGun()
@@ -26,26 +33,24 @@ public class Revolver : Gun
         List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
         Gun.FiredProjectile b;
         b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
-        b.is_crit = false;
+        b.is_crit = UnityEngine.Random.Range(0f, 1f) < crit_chance;
         b.projectile = Projectile.ProjectileType.Bullet;
-        b.range = 9; // TODO: also not sure what this effects, and speed should also be slower
-        b.speed = 3f;
-        // jams, wont fire.
-        if (Random.Range(0f, 1f) > jam_rate)
-        {
-            fp.Add(b);
-        }
+        b.range = range; 
+        b.speed = 4f;
+   
+        
+        fp.Add(b);
         return fp;
     }
 
     public override int getCapacity()
     {
-        return 6; 
+        return capacity; 
     }
 
     public override float getReloadTime()
     {
-        return 3f; // TODO: should be  average
+        return reloadtime; // TODO: should be  average
     }
 
     //means time between shots

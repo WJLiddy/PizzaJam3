@@ -4,18 +4,29 @@ using UnityEngine;
 
 public class TightCannon : Gun
 {
+<<<<<<< HEAD
+    public float crit_chance;
+    public int capacity;
+    public float range;
+    public float speed;
+    public float reloadtime;
+=======
     public override string getName()
     {
         return "Tight Cannon";
     }
 
+>>>>>>> 4437c264d87a89bd6bf7682755dba2acef60d4a8
 
-    public float jam_rate = 0;
 
     public override Gun spawn(float rarity)
     {
         TightCannon c = new TightCannon();
-        c.jam_rate = (1f - rarity) / 30; // TODO: copied from m4. need to adjust for canon
+        c.crit_chance = rarity / 30f; // Worst gun never crits, best gun crits 30%
+        c.capacity = 1 + (int)(rarity / 0.5f); //up to 2 extra bullets
+        c.range = 2 + (int)UnityEngine.Random.Range(0f, 3 * rarity); // Chance of extended range if high crit chance.
+        c.speed = 2 + (int)(rarity / 0.5f);
+        c.reloadtime = 10 - (int)(rarity / 0.2f);
         return c;
     }
 
@@ -25,26 +36,22 @@ public class TightCannon : Gun
         List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
         Gun.FiredProjectile b;
         b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
-        b.is_crit = false;
-        b.projectile = Projectile.ProjectileType.Bullet;
-        b.range = 9; // TODO: also not sure what this effects, and speed should also be slower
-        b.speed = 3f;
-        // jams, wont fire.
-        if (Random.Range(0f, 1f) > jam_rate)
-        {
-            fp.Add(b);
-        }
+        b.is_crit = UnityEngine.Random.Range(0f, 1f) < crit_chance;
+        b.projectile = Projectile.ProjectileType.CannonBall;
+        b.range = range;
+        b.speed = speed;
+        fp.Add(b);
         return fp;
     }
 
     public override int getCapacity()
     {
-        return 1; // one might be to few, but if the damage is high enough perhaps not
+        return capacity; 
     }
 
     public override float getReloadTime()
     {
-        return 3f; // TODO: should be longer than average
+        return reloadtime; 
     }
 
     //means time between shots
