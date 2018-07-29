@@ -263,7 +263,7 @@ public class PlayerSprite : MonoBehaviour
                 }
                 g.bulletsLeft--;
                 gun1_did_fire_last_frame = true;
-                gr.AddBullet(b, getMouseAngle(),this.transform.localPosition);
+                gr.AddBullet(b, getMouseAngle(),this.transform.localPosition,true);
             }
         }
     }

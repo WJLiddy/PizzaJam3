@@ -11,7 +11,7 @@ public class GameRenderer : MonoBehaviour
     // FUCK SHIT AAAAAAAAAAAAAHHHHHHHHHHHHHHHH
     public Dictionary<IntVec2, GameObject> guardlights = new Dictionary<IntVec2, GameObject>();
     GameState gs;
-    public static readonly float TICK_TIME = 0.05f;
+    public static readonly float TICK_TIME = 0.5f;
     public TileRenderer tr;
     public PlayerRenderer pr;
     public Light l;
@@ -88,7 +88,7 @@ public class GameRenderer : MonoBehaviour
         bItem2.SetActive(false);
     }
 
-    public void AddBullet(Gun.FiredProjectile fp, float base_angle_deg, Vector2 start)
+    public void AddBullet(Gun.FiredProjectile fp, float base_angle_deg, Vector2 start, bool allied)
     {
         GameObject go = Instantiate(Resources.Load<GameObject>("bullet"));
         float ang = base_angle_deg + fp.accuracy_modifier_degree;
@@ -97,6 +97,7 @@ public class GameRenderer : MonoBehaviour
         go.GetComponent<RenderBullet>().is_crit = fp.is_crit;
         go.GetComponent<RenderBullet>().range =  fp.range;
         go.GetComponent<RenderBullet>().gs = gs;
+        go.GetComponent<RenderBullet>().friendlyBullet = allied;
         go.GetComponent<RenderBullet>().gr = this;
         go.transform.localPosition = start;
     }

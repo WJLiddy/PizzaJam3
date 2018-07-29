@@ -20,7 +20,7 @@ public class Swarmer : Baddie
             return;
         }
         Debug.Assert(pos != null);
-        shootProjectile(pos, Projectile.ProjectileType.Bullet, iv, 1, 3);
+        shootProjectile(pos, Projectile.ProjectileType.Bullet, iv, 1, 3,false);
         if(iv != null)
         {
             var r = getPath(pos, iv, gs);
