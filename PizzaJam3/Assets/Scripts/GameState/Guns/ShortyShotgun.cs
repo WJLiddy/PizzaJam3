@@ -11,7 +11,7 @@ public class ShortyShotgun : Gun
     public float speed = 6;
     public float spread;
     public bool consumeMultipleAmmoPerFire = false;
-    public int burstsize;
+    public int burst_size;
     public override string getName()
     {
         return "Shorty Shotty";
@@ -27,17 +27,18 @@ public class ShortyShotgun : Gun
         s.jam_rate = (1f - rarity) / 30; // TODO: copied from m4. need to adjust should be high
         s.reloadtime = 6 - ((rarity / 0.2f) * capacity); // should be based on how many shells have been fired
         s.spread = 40 - (7 * UnityEngine.Random.Range(0f, rarity));
-        s.burstsize = 3 + (int)(rarity / 0.5f);
+        s.burst_size = 3 + (int)(rarity / 0.5f);
         return s;
     }
 
     public override List<FiredProjectile> fireGun()
     {
-        for(int i = 0; i != burst_size; ++i)
+        //shoots one bullet
+        List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
+        Gun.FiredProjectile b;
+        for (int i = 0; i != burst_size; ++i)
         {
-            //shoots one bullet
-            List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
-            Gun.FiredProjectile b;
+            
             b.accuracy_modifier_degree = UnityEngine.Random.Range(-spread, spread);
             b.is_crit = false;
             b.projectile = Projectile.ProjectileType.Fletchette;
@@ -48,8 +49,9 @@ public class ShortyShotgun : Gun
             {
                 fp.Add(b);
             }
-            return fp;
+            
         }
+        return fp;
     }
 
     public override int getCapacity()

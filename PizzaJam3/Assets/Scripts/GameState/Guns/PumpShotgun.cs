@@ -17,7 +17,7 @@ public class PumpShotgun : Gun
     public float jam_rate = 0.1f; // this should be high for this gun I assume this is 10% chance
     public bool fullauto;
     public bool consumeMultipleAmmoPerFire = false;
-    public int burstsize;
+    public int burst_size;
 
     public override Gun spawn(float rarity)
     {
@@ -28,17 +28,18 @@ public class PumpShotgun : Gun
         s.fullauto = true; //TODO: fix this needs rarity 
         s.reloadtime = 6 - ((rarity / 0.2f) * capacity); // should be based on how many shells have been fired
         s.spread = 30 - (7 * UnityEngine.Random.Range(0f, rarity));
-        s.burstsize = 3 + (int)(rarity / 0.5f);
+        s.burst_size = 3 + (int)(rarity / 0.5f);
         return s;
     }
 
     public override List<FiredProjectile> fireGun()
     {
+        //shoots one bullet
+        List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
+        Gun.FiredProjectile b;
         for (int i = 0; i != burst_size; ++i)
         {
-            //shoots one bullet
-            List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
-            Gun.FiredProjectile b;
+            
             b.accuracy_modifier_degree = UnityEngine.Random.Range(-spread, spread);
             b.is_crit = false;
             b.projectile = Projectile.ProjectileType.Fletchette;
@@ -49,8 +50,9 @@ public class PumpShotgun : Gun
             {
                 fp.Add(b);
             }
-            return fp;
+            
         }
+        return fp;
     }
 
     public override int getCapacity()
