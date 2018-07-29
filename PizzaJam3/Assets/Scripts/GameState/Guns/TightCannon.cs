@@ -38,7 +38,7 @@ public class TightCannon : Gun
         b.is_crit = UnityEngine.Random.Range(0f, 1f) < crit_chance;
         b.projectile = Projectile.ProjectileType.CannonBall;
         b.range = range;
-        b.speed = speed * (b.is_crit ? 1 : 2);
+        b.speed = speed * (b.is_crit ? 1.5f : 1);
         fp.Add(b);
         return fp;
     }

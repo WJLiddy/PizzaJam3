@@ -70,6 +70,6 @@ public class MP5 : Gun
 
     public override bool consumeMultipleAmmoPerFire()
     {
-        return false;
+        return true;
     }
 }
