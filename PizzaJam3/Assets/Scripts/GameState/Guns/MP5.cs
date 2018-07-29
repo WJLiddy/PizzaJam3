@@ -22,7 +22,7 @@ public class MP5 : Gun
     {
         MP5 m = new MP5();
         m.crit_chance = 3; // Flat 3 percent crit chance, all bullets will crit.
-        m.range = 4 + (int)UnityEngine.Random.Range(0f, 4*rarity); // Chance of extended range if high crit chance.
+        m.range = 6 + (int)UnityEngine.Random.Range(0f, 4*rarity); // Chance of extended range if high crit chance.
         m.capacity = 25 + (int)(rarity / 0.05f); //up to 20 extra bullets
         m.burst_size = 3 + (int)UnityEngine.Random.Range(0f, 3f * rarity); //may shoot 4 or 5 bullets if rare
         // all mp5s have bad spread, rare ones mabye less.

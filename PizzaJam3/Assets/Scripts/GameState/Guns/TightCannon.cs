@@ -23,8 +23,8 @@ public class TightCannon : Gun
         TightCannon c = new TightCannon();
         c.crit_chance = rarity / 30f; // Worst gun never crits, best gun crits 30%
         c.capacity = 1 + (int)(rarity / 0.5f); //up to 2 extra bullets
-        c.range = 4 + (int)UnityEngine.Random.Range(0f, 3 * rarity); // Chance of extended range if high crit chance.
-        c.speed = 4 + (int)(rarity / 0.5f);
+        c.range = 6 + (int)UnityEngine.Random.Range(0f, 3 * rarity); // Chance of extended range if high crit chance.
+        c.speed = 6 + (int)(rarity / 0.5f);
         c.reloadtime = 10 - (int)(rarity / 0.2f);
         return c;
     }

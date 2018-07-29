@@ -6,12 +6,12 @@ public class ShortyShotgun : Gun
 {
     public float crit_chance;
     public int capacity;
-    public float range = 4;
+    public float range = 6;
     public float reloadtime;
-    public float speed = 4;
+    public float speed = 6;
     public float spread;
     public bool consumeMultipleAmmoPerFire = false;
-
+    public int burstsize;
     public override string getName()
     {
         return "Shorty Shotty";
@@ -27,25 +27,29 @@ public class ShortyShotgun : Gun
         s.jam_rate = (1f - rarity) / 30; // TODO: copied from m4. need to adjust should be high
         s.reloadtime = 6 - ((rarity / 0.2f) * capacity); // should be based on how many shells have been fired
         s.spread = 40 - (7 * UnityEngine.Random.Range(0f, rarity));
+        s.burstsize = 3 + (int)(rarity / 0.5f);
         return s;
     }
 
     public override List<FiredProjectile> fireGun()
     {
-        //shoots one bullet
-        List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
-        Gun.FiredProjectile b;
-        b.accuracy_modifier_degree = UnityEngine.Random.Range(-spread, spread);
-        b.is_crit = false;
-        b.projectile = Projectile.ProjectileType.Fletchette;
-        b.range = 9; // TODO: also not sure what this effects, and speed should also be slower
-        b.speed = 3f;
-        // jams, wont fire.
-        if (Random.Range(0f, 1f) > jam_rate)
+        for(int i = 0; i != burst_size; ++i)
         {
-            fp.Add(b);
+            //shoots one bullet
+            List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
+            Gun.FiredProjectile b;
+            b.accuracy_modifier_degree = UnityEngine.Random.Range(-spread, spread);
+            b.is_crit = false;
+            b.projectile = Projectile.ProjectileType.Fletchette;
+            b.range = range; // TODO: also not sure what this effects, and speed should also be slower
+            b.speed = speed;
+            // jams, wont fire.
+            if (Random.Range(0f, 1f) > jam_rate)
+            {
+                fp.Add(b);
+            }
+            return fp;
         }
-        return fp;
     }
 
     public override int getCapacity()
@@ -61,7 +65,7 @@ public class ShortyShotgun : Gun
     //means time between shots
     public override float getROF()
     {
-        return 0.9f; // TODO: figure out how this looks in game but slower than this
+        return 2f; // TODO: figure out how this looks in game but slower than this
     }
 
     public override bool isFullAuto()
