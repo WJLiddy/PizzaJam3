@@ -12,10 +12,11 @@ public class Musket : Gun {
     }
 
 
+    // Damage = 60, reload time = 7, ~~ 10 DPS
     public override Gun spawn(float rarity)
     {
         Musket m = new Musket();
-        m.reloadtime = 6 - (int)(rarity / 0.2f); //possible 1 sec reload over 6 for base
+        m.reloadtime = 7 - (rarity * 3);
         return m;
     }
 
@@ -25,11 +26,11 @@ public class Musket : Gun {
         //shoots one bullet
         List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
         Gun.FiredProjectile b;
-        b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
-        b.is_crit = false;
-        b.projectile = Projectile.ProjectileType.Bullet;
+        b.accuracy_modifier_degree = UnityEngine.Random.Range(-10f, 10f);
+        b.is_crit = Random.Range(0, 5) > 0.5;
+        b.projectile = Projectile.ProjectileType.Musket;
         b.range = 9;
-        b.speed = 5f;      
+        b.speed = 6f; 
         fp.Add(b);
         return fp;
     }

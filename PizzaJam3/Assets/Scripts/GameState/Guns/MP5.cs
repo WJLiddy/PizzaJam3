@@ -17,13 +17,13 @@ public class MP5 : Gun
         return "MP5";
     }
 
-
+    //an even 50 fps. 250 damage / 5s ~ 50dps
     public override Gun spawn(float rarity)
     {
         MP5 m = new MP5();
-        m.crit_chance = 3; // Flat 3 percent crit chance, all bullets will crit.
-        m.range = 6 + (int)UnityEngine.Random.Range(0f, 4*rarity); // Chance of extended range if high crit chance.
-        m.capacity = 25 + (int)(rarity / 0.05f); //up to 20 extra bullets
+        m.range = 7 + (int)UnityEngine.Random.Range(0f, 7*rarity); // Chance of extended range.
+        m.capacity = 25 + (int)(rarity * 15); //up to 20 extra bullets
+        m.crit_chance = 1f / capacity;
         m.burst_size = 3 + (int)UnityEngine.Random.Range(0f, 3f * rarity); //may shoot 4 or 5 bullets if rare
         // all mp5s have bad spread, rare ones mabye less.
         m.spread = 15 - (7 * UnityEngine.Random.Range(0f, rarity));
@@ -41,10 +41,8 @@ public class MP5 : Gun
             b.accuracy_modifier_degree = UnityEngine.Random.Range(-spread, spread);
             b.is_crit = is_crits;
             b.projectile = Projectile.ProjectileType.Bullet;
-
-
             b.range = range;
-            b.speed = 4f + Random.Range(0f,2f);
+            b.speed = 5f + Random.Range(0f,2f);
             fp.Add(b);
         }
         return fp;

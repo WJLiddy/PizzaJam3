@@ -15,11 +15,11 @@ public class BuildPanel : MonoBehaviour
         GetComponentsInChildren<Text>()[1].text =
             "Foundry\nStores ore and creates mining robots\n\n" + gs.priceRender(BALANCE_CONSTANTS.FOUNDRY_COST);
         GetComponentsInChildren<Text>()[2].text =
-            "Refinery\nStores wood and creates drilling robots\n\n" + gs.priceRender(BALANCE_CONSTANTS.REFINERY_COST);
+            "Refinery\nStores oil and creates drilling robots\n\n" + gs.priceRender(BALANCE_CONSTANTS.REFINERY_COST);
         GetComponentsInChildren<Text>()[3].text =
             "Guard Tower\nActs as a light source, can shoot guns\n\n" + gs.priceRender(BALANCE_CONSTANTS.TOWER_COST);
         GetComponentsInChildren<Text>()[4].text =
-            "Gunsmith\nGiven resources, produces guns every 12 hours\n\n" + gs.priceRender(BALANCE_CONSTANTS.GUNSMITH_COST);
+            "Gunsmith\nTakes 5% of oil per hour, produces guns every 12 hours. More oil = better guns.\n\n" + gs.priceRender(BALANCE_CONSTANTS.GUNSMITH_COST);
     }
 
     public void buyItem(string s)
@@ -48,11 +48,11 @@ public class BuildPanel : MonoBehaviour
             return;
         }
         tu.gr = gr;
-        gs.placeItemNear(tu, new IntVec2((int)gs.player.location.x, (int)gs.player.location.y));
+        var v = gs.placeItemNear(tu, new IntVec2((int)gs.player.location.x, (int)gs.player.location.y));
 
         if (tu is GuardTower)
         {
-            gr.addGuardLight(new IntVec2((int)gs.player.location.x, (int)gs.player.location.y));
+            gr.addGuardLight(v);
         }
 
         if(tu != null)

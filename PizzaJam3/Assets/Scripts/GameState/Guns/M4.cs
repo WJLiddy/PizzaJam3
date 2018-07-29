@@ -21,13 +21,13 @@ public class M4: Gun
         return m;
     }
 
-
+    //75 DPS. 
     public override List<FiredProjectile> fireGun()
     {
         //shoots one bullet
         List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
         Gun.FiredProjectile b;
-        b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
+        b.accuracy_modifier_degree = UnityEngine.Random.Range(-5f, 5f);
         b.is_crit = false;
         b.projectile = Projectile.ProjectileType.Bullet;
         b.range = 9;

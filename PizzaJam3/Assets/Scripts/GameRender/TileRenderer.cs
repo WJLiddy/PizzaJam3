@@ -81,6 +81,9 @@ public class TileRenderer : MonoBehaviour
                 else if (gs.tiles_[x, y] is Baddie)
                 {
                     renderBaddie(gs.tiles_[x, y] as Baddie, x, y);
+                } else if (gs.tiles_[x,y] is GroundGun)
+                {
+                    renderGroundGun(gs.tiles_[x, y] as GroundGun, x, y);
                 }
 
             }
@@ -122,6 +125,13 @@ public class TileRenderer : MonoBehaviour
     {
         Sprite s = sd["swarmer"];
         tiles[x,y].GetComponent<SpriteRenderer>().sprite = s;
+    }
+
+
+    void renderGroundGun(GroundGun g, int x, int y)
+    {
+        Sprite s = sd[g.gun.getName()];
+        tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
     }
 
     void renderRobot(HarvesterRobot r, int x, int y)

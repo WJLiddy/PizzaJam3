@@ -48,7 +48,7 @@ public class GameState
     public int player_wood;
     public int player_ore;
     public int player_oil;
-    int day = 1;
+    public int day = 1;
     public static readonly float TREE_THRESH = 0.5f;
     public static readonly int minutes_per_tick = 4;
     public int dim_;
@@ -71,6 +71,7 @@ public class GameState
        addTrees();
        addOres();
        addOils();
+       addGuns();
     }
 
     public bool isOOB (IntVec2 i)
@@ -116,6 +117,22 @@ public class GameState
         }
     }
 
+    public void addGuns()
+    {
+        for (int i = 0; i != ((dim_ * dim_) / 2000); ++i)
+        {
+            Gun g = null;
+            switch(Random.Range(0,4))
+            {
+                case 0: g = new Musket().spawn(0); break;
+                case 1: g = new Revolver().spawn(0); break;
+                case 2: g = new M1911().spawn(0);  break;
+                case 3: g = new ShortyShotgun().spawn(0); break;
+            }
+
+            tiles_[Random.Range(0, dim_), Random.Range(0, dim_)] = new GroundGun(g);
+        }
+    }
 
     public void addClearing(IntVec2 loc, int radius)
     {
@@ -135,6 +152,12 @@ public class GameState
     public bool hurt(int x, int y, int dmg, out bool stop)
     {
         stop = false;
+        if(isOOB(new IntVec2(x,y)))
+        {
+            stop = true;
+            return false;
+        }
+
         if (getItem(new IntVec2(x, y)) != null)
         {
             stop = true;
@@ -164,7 +187,7 @@ public class GameState
             {
 
                 if (tiles_[x_start, y_start] != null && tiles_[x_start, y_start] is Robot 
-                    && (tiles_[x_start, y_start] is GuardTower || (time_hr > 5 && time_hr < 21)))
+                    && (tiles_[x_start, y_start] is GuardTower || tiles_[x_start, y_start] is GunSmith || (time_hr > 5 && time_hr < 21)))
                 {
                     a.start = new IntVec2(x_start, y_start);
                     (tiles_[x_start, y_start] as Robot).doRobotAI(new IntVec2(x_start, y_start), this, ref a.anim, ref a.animType);
@@ -188,14 +211,14 @@ public class GameState
         return false;
     }
 
-    public void placeItemNear(TileItem ti, IntVec2 iv)
+    public IntVec2 placeItemNear(TileItem ti, IntVec2 iv)
     {
         var l = player.inTiles();
 
         if(getItem(iv) == null && !l.Contains(iv))
         {
             tiles_[iv.x, iv.y] = ti;
-            return;
+            return new IntVec2(iv.x,iv.y);
         }
 
         int range = 1;
@@ -209,7 +232,7 @@ public class GameState
                     if (!isOOB(niv) && getItem(niv) == null && !l.Contains(niv))
                     {
                         tiles_[iv.x + x, iv.y + y] = ti;
-                        return;
+                        return new IntVec2(iv.x + x, iv.y + y);
                     }
                 }
             }
@@ -381,7 +404,7 @@ public class GameState
 
                 if (!isOOB(new IntVec2(x,y)) && tiles_[x, y] == null)
                 {
-                    Baddie b = new Swarmer();
+                    Baddie b = new Swarmer(BALANCE_CONSTANTS.BADDIE_HP + (day * BALANCE_CONSTANTS.BADDIE_HP_GROWTH_DAY));
                     b.anim = TileUnit.Animation.IDLE;
                     b.gr = gr;
                     var v = b.find(new IntVec2(x, y), this, flighthouse);

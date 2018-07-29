@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class RenderBullet : MonoBehaviour
 {
+    public Projectile.ProjectileType type;
     public bool is_enemy_bullet;
     public GameState gs;
     public GameRenderer gr;
@@ -41,15 +42,47 @@ public class RenderBullet : MonoBehaviour
                     return;
                 }
             }
-            int dmg = UnityEngine.Random.Range(7, 11);
+            int dmg = 0;
+            if (type == Projectile.ProjectileType.Bullet)
+            {
+                dmg = UnityEngine.Random.Range(7, 11);
+            }
+
+            if(type == Projectile.ProjectileType.Musket)
+            {
+                dmg = UnityEngine.Random.Range(20, 30);
+            }
+
+            if (type == Projectile.ProjectileType.CannonBall)
+            {
+                dmg = UnityEngine.Random.Range(40, 75);
+            }
+
+            if (type == Projectile.ProjectileType.Rocket)
+            {
+                dmg = UnityEngine.Random.Range(100, 200);
+
+            }
+
+            if(is_crit)
+            {
+                dmg *= 3;
+            }
             bool damaged = gs.hurt(x,y,dmg, out stop);
             if(damaged)
             {
-                gr.addDFloat(transform.localPosition, dmg);
+                gr.addDFloat(transform.localPosition, dmg + (is_crit ? "!" : ""));
             }
             if(stop)
             {
                 Destroy(this.gameObject);
+                for(int i = -1; i != 2; i++)
+                {
+                    for(int j = -1; j != 2; ++j)
+                    {
+                        gs.hurt(x + i, y + i , dmg / 2, out stop);
+                    }
+                }
             }
         }
             // get name. it will be a coordinate (x,y) or the player which we can look up and handle accordingly

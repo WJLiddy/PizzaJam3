@@ -7,8 +7,8 @@ public class PlayerSprite : MonoBehaviour
 {
 
     float speedmod = 3.0f;
-    float animTime = 0.1f;
-    float animTimeMax = 0.5f;
+    float animTime = 0.0f;
+    float animTimeMax = 0.3f;
     float cbox_radius = 0.2f;
 
     bool gun1_did_fire_last_frame = false;
@@ -294,7 +294,6 @@ public class PlayerSprite : MonoBehaviour
     //renderer has to handle bullets.
     public void shootGun(GameRenderer gr, Gun g)
     {
-        Player p = gs.player;
 
         if (g.bulletsLeft > 0)
         {

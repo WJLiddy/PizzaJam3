@@ -17,15 +17,15 @@ public class TightCannon : Gun
     }
     
 
-
+    // 170 DPS. 4 * 50 = 200 damange, only takes 1 s to reload?
     public override Gun spawn(float rarity)
     {
         TightCannon c = new TightCannon();
-        c.crit_chance = rarity / 30f; // Worst gun never crits, best gun crits 30%
-        c.capacity = 1 + (int)(rarity / 0.5f); //up to 2 extra bullets
-        c.range = 6 + (int)UnityEngine.Random.Range(0f, 3 * rarity); // Chance of extended range if high crit chance.
-        c.speed = 6 + (int)(rarity / 0.5f);
-        c.reloadtime = 10 - (int)(rarity / 0.2f);
+        c.crit_chance = rarity;
+        c.capacity = 4;
+        c.range = 20;
+        c.speed = 10;
+        c.reloadtime = 1.5f;
         return c;
     }
 
@@ -34,11 +34,11 @@ public class TightCannon : Gun
         //shoots one bullet
         List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
         Gun.FiredProjectile b;
-        b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
+        b.accuracy_modifier_degree = UnityEngine.Random.Range(-3f, 3f);
         b.is_crit = UnityEngine.Random.Range(0f, 1f) < crit_chance;
         b.projectile = Projectile.ProjectileType.CannonBall;
         b.range = range;
-        b.speed = speed;
+        b.speed = speed * (b.is_crit ? 1 : 2);
         fp.Add(b);
         return fp;
     }

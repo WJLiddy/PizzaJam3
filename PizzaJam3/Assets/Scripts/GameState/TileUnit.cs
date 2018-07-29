@@ -19,7 +19,7 @@ public abstract class TileUnit : TileItem
     public GameRenderer gr;
     public Animation anim;
     public IntVec2 animDir;
-    private int HP;
+    protected int HP;
     public abstract int getMaxHP();
 
     public TileUnit()

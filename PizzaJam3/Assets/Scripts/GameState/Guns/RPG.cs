@@ -14,11 +14,12 @@ public class RPG : Gun
     }
 
 
+    // 250 DPS. Rockets deal 100 + splash damage.
     public override Gun spawn(float rarity)
     {
         RPG r = new RPG();
-        r.capacity = 1 + (int)(rarity / 0.2f); //up to 5 extra
-        r.reloadtime = 6 - ((rarity / 0.2f) * capacity);
+        r.capacity = 1;
+        r.reloadtime = 1;
         return r;
     }
 
@@ -28,11 +29,11 @@ public class RPG : Gun
         //shoots one bullet
         List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
         Gun.FiredProjectile b;
-        b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
+        b.accuracy_modifier_degree = UnityEngine.Random.Range(-2f, 2f);
         b.is_crit = false;
         b.projectile = Projectile.ProjectileType.Rocket;
-        b.range = 10;
-        b.speed = 10f;
+        b.range = 15;
+        b.speed = 8f;
         fp.Add(b);
         return fp;
     }
@@ -50,7 +51,7 @@ public class RPG : Gun
     //means time between shots
     public override float getROF()
     {
-        return 2f; // TODO: figure out why this is faster than the shotty, yet I copied it from there
+        return 2f;
     }
 
     public override bool isFullAuto()

@@ -16,14 +16,14 @@ public class Revolver : Gun
         return "Revolver";
     }
 
-
+    // 5 shots * 10 dmg / 3.5 s reload ~ 15 DPS
     public override Gun spawn(float rarity)
     {
         Revolver r = new Revolver();
-        r.capacity = 5 + (int)(rarity / 0.2f); //up to 5 extra bullets
-        r.range = 7 + (int)UnityEngine.Random.Range(0f, 4 * rarity); // Chance of extended range if high crit chance.
-        r.reloadtime = 6 - (int)(rarity / 0.2f); //possible 1 sec reload over 6 for base
-        r.crit_chance = rarity / 20f; // Worst gun never crits, best gun crits 20%
+        r.capacity = 5 + (int)UnityEngine.Random.Range(0f, (rarity * 5)); //up to 4 extra bullets
+        r.range = 10 + (int)UnityEngine.Random.Range(0f, rarity * 5); // Chance of extended range if high crit chance.
+        r.reloadtime = (int)(r.capacity * 0.7f);
+        r.crit_chance = rarity / 20f; // Worst gun never crits, best gun crits 5%
         return r;
     }
 
@@ -32,11 +32,11 @@ public class Revolver : Gun
         //shoots one bullet
         List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
         Gun.FiredProjectile b;
-        b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
+        b.accuracy_modifier_degree = UnityEngine.Random.Range(-9f, 9f);
         b.is_crit = UnityEngine.Random.Range(0f, 1f) < crit_chance;
         b.projectile = Projectile.ProjectileType.Bullet;
         b.range = range; 
-        b.speed = 5f;
+        b.speed = 7f;
    
         
         fp.Add(b);

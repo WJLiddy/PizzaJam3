@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class BALANCE_CONSTANTS
 {
-    public static int WORKER_HP = 30;
-    public static int WAREHOUSE_HP = 200;
+    public static int WORKER_HP = 50;
+    public static int WAREHOUSE_HP = 400;
     public static int BADDIE_HP = 30;
-    public static int TOWER_HP = 200;
-    public static int BADDIE_HP_GROWTH_DAY = 20;
+    public static int BADDIE_HP_GROWTH_DAY = 15;
+    public static int TOWER_HP = 300;
 
                                        // WOOD, ORE, OIL 
     public static int[] SAWMILL_COST = new int[3]{ 500, 0, 0 };

@@ -12,8 +12,8 @@ public class GameRenderer : MonoBehaviour
     public Dictionary<IntVec2, GameObject> guardlights = new Dictionary<IntVec2, GameObject>();
     GameState gs;
     bool in_ai_phase = false;
-    public static readonly float AI_TIME = 0.5f;
-    public static readonly float DRAW_TIME = 0.5f;
+    public static readonly float AI_TIME = 0.9f;
+    public static readonly float DRAW_TIME = 0.1f;
     public TileRenderer tr;
     public PlayerRenderer pr;
     public Light l;
@@ -41,18 +41,22 @@ public class GameRenderer : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 20;
         QualitySettings.vSyncCount = 0;
         gs = new GameState(100);
         gs.addClearing(new IntVec2(0, 0), 10);
-        gs.tiles_[0, 0] = new HarvesterRobot(Resource.Type.WOOD);
-        gs.tiles_[1, 0] = new CollectorRobot(Resource.Type.WOOD);
-        gs.tiles_[2, 0] = new Storage(Resource.Type.WOOD);
-        gs.player_wood = 2000;
+        gs.tiles_[7, 6] = new HarvesterRobot(Resource.Type.WOOD);
+        gs.tiles_[6, 7] = new CollectorRobot(Resource.Type.WOOD);
+        gs.tiles_[7, 7] = new Storage(Resource.Type.WOOD);
+
+        GuardTower g = new GuardTower();
+        g.gr = this;
+        addGuardLight(new IntVec2(8, 8));
+        gs.tiles_[8, 8] = g;
 
         //temp.
-        gs.player_ore = 3000;
-        gs.time_hr = 19;
+        gs.player_wood = 2000;
+        gs.time_hr = 9;
        
         tr.Setup(gs);
         gs.player = new Player();
@@ -124,8 +128,7 @@ public class GameRenderer : MonoBehaviour
 
             bItem1.GetComponentInChildren<Text>().text = "Make Harvester\n" + gs.priceRenderNoNewline(costof1);
             bItem2.GetComponentInChildren<Text>().text = "Make Collector\n" + gs.priceRenderNoNewline(costof2);
-        } else
-        if(tu is GuardTower)
+        } else if(tu is GuardTower)
         {
             bItem1.SetActive(gs.player.gun1 != null);
             if (gs.player.gun1 != null)
@@ -138,7 +141,38 @@ public class GameRenderer : MonoBehaviour
             {
                 bItem2.GetComponentInChildren<Text>().text = "Attach " + gs.player.gun2.getName();
             }
+
+            if((tu as GuardTower).storedGun != null)
+            {
+                bItem1.SetActive(false);
+                bItem2.SetActive(false);
+            }
         }
+
+        else if (tu is GroundGun)
+        {
+
+            bItem1.SetActive(true);
+            bItem2.SetActive(true);
+            GroundGun gg = (tu as GroundGun);
+            if (gs.player.gun1 == null)
+            {
+                bItem1.GetComponentInChildren<Text>().text = "Take " + gg.gun.getName();
+            } else
+            {
+                bItem1.GetComponentInChildren<Text>().text = "Swap for " + gg.gun.getName();
+            }
+
+            if (gs.player.gun2 == null)
+            {
+                bItem2.GetComponentInChildren<Text>().text = "Take " + gg.gun.getName();
+            }
+            else
+            {
+                bItem2.GetComponentInChildren<Text>().text = "Swap for " + gg.gun.getName();
+            }
+        }
+
 
         else
         {
@@ -151,6 +185,28 @@ public class GameRenderer : MonoBehaviour
         GameObject go = Instantiate(Resources.Load<GameObject>("tower_light"));
         go.transform.SetParent(this.transform);
         go.transform.localPosition = new Vector3(iv.x, iv.y, -4);
+
+        /**
+        for(int i = -1; i != 2; ++i)
+        {
+            for(int j = -1; j != 2; ++j)
+            {
+                if(i == 0 && j == 0)
+                {
+                    continue;
+                }
+
+                if(!gs.isOOB(new IntVec2(iv.x+i,iv.y+j)) && gs.getItem(new IntVec2(iv.x + i, iv.y + j)) != null &&
+                     gs.getItem(new IntVec2(iv.x + i, iv.y + j)) is GuardTower)
+                {
+                    if(guardlights[new IntVec2(iv.x + i, iv.y + j)].GetComponent<Light>().intensity > 0)
+                    dim = true;
+                }
+            }
+        }
+
+       // go.GetComponent<Light>().intensity = (dim ? 0 : 0.8f);
+    */
         guardlights[iv] = go;
     }
 
@@ -169,7 +225,23 @@ public class GameRenderer : MonoBehaviour
 
     public void AddBullet(Gun.FiredProjectile fp, float base_angle_deg, Vector2 start, bool allied)
     {
-        GameObject go = Instantiate(Resources.Load<GameObject>("bullet"));
+
+        GameObject go = null;
+        switch (fp.projectile)
+        {
+            case Projectile.ProjectileType.Bullet: go = Instantiate(Resources.Load<GameObject>("bullet"));
+                break;
+            case Projectile.ProjectileType.CannonBall:
+                go = Instantiate(Resources.Load<GameObject>("cannonball"));
+                break;
+            case Projectile.ProjectileType.Musket:
+                go = Instantiate(Resources.Load<GameObject>("musket"));
+                break;
+            case Projectile.ProjectileType.Rocket:
+                go = Instantiate(Resources.Load<GameObject>("rocket"));
+                break;
+        }
+
         float ang = base_angle_deg + fp.accuracy_modifier_degree;
         go.transform.localEulerAngles = new Vector3(0,0,ang);
         go.GetComponent<Rigidbody2D>().velocity = new Vector3(fp.speed * Mathf.Cos(ang * Mathf.Deg2Rad), fp.speed * Mathf.Sin(ang * Mathf.Deg2Rad));
@@ -181,11 +253,11 @@ public class GameRenderer : MonoBehaviour
         go.transform.localPosition = start;
     }
 
-    internal void addDFloat(Vector3 localPosition, int dmg)
+    internal void addDFloat(Vector3 localPosition, string dmg)
     {
 
         GameObject go = Instantiate(Resources.Load<GameObject>("d_float"));
-        go.GetComponent<TextFadeOut>().text = "" + dmg;
+        go.GetComponent<TextFadeOut>().text =  dmg;
         go.transform.SetParent(dfloats.transform);
         go.transform.localPosition = localPosition;
 
@@ -223,10 +295,13 @@ public class GameRenderer : MonoBehaviour
     {
         if (in_ai_phase)
         {
-            animSet a;
-            if (gs.processOne(ref GLOBAL_ANIM_X, ref GLOBAL_ANIM_Y, out a))
+            for (int i = 0; i != 3; ++i)
             {
-                ANIMSETS.Add(a);
+                animSet a;
+                if (gs.processOne(ref GLOBAL_ANIM_X, ref GLOBAL_ANIM_Y, out a))
+                {
+                    ANIMSETS.Add(a);
+                }
             }
         }
 
@@ -304,7 +379,7 @@ public class GameRenderer : MonoBehaviour
         if (t is Storage)
         {
             int[] costof = null;
-            if(opt == 1)
+            if (opt == 1)
             {
                 switch ((t as Storage).type)
                 {
@@ -318,7 +393,7 @@ public class GameRenderer : MonoBehaviour
                 }
             }
 
-            if(opt == 2)
+            if (opt == 2)
             {
                 switch ((t as Storage).type)
                 {
@@ -333,12 +408,12 @@ public class GameRenderer : MonoBehaviour
             }
         }
 
-        if(t is GuardTower)
+        if (t is GuardTower)
         {
             GuardTower gt = t as GuardTower;
-            if(opt == 1)
+            if (opt == 1)
             {
-                if(gt.storedGun == null && p.gun1 != null)
+                if (gt.storedGun == null && p.gun1 != null)
                 {
                     gt.storedGun = p.gun1;
                     p.gun1 = null;
@@ -352,6 +427,34 @@ public class GameRenderer : MonoBehaviour
                     gt.storedGun = p.gun2;
                     p.gun2 = null;
                 }
+            }
+        }
+
+        if (t is GroundGun)
+        {
+            GroundGun gg = (t as GroundGun);
+            if (opt == 1 && gs.player.gun1 == null)
+            {
+                gs.player.gun1 = gg.gun;
+                gs.tiles_[v.x, v.y] = null;
+            }
+            if (opt == 1 && gs.player.gun1 != null)
+            {
+                Gun g = gg.gun;
+                gg.gun = gs.player.gun1;
+                gs.player.gun1 = g;
+            }
+
+            if (opt == 2 && gs.player.gun2 == null)
+            {
+                gs.player.gun2 = gg.gun;
+                gs.tiles_[v.x, v.y] = null;
+            }
+            if (opt == 2 && gs.player.gun2 != null)
+            {
+                Gun g = gg.gun;
+                gg.gun = gs.player.gun2;
+                gs.player.gun2 = g;
             }
         }
     }

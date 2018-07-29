@@ -6,8 +6,9 @@ public class Projectile
 {
     public enum ProjectileType
     {
-        CannonBall, //   High        Big        High
-        Bullet,     //   Low         Small      Low
-        Rocket     //   High        Big        High
+        CannonBall, 
+        Bullet,  
+        Rocket,
+        Musket
     }
 }

@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class Swarmer : Baddie
 {
+    int max_hp;
+
+    public Swarmer(int max_hp)
+    {
+        this.max_hp = max_hp;
+        HP = max_hp;
+    }
     public bool validTarget(TileItem ti)
     {
         return (ti is TileUnit) && (ti as TileUnit).isFriendly();
@@ -40,7 +47,7 @@ public class Swarmer : Baddie
 
     public override int getMaxHP()
     {
-        return 100;
+        return max_hp;
     }
 
     public override bool isFriendly()

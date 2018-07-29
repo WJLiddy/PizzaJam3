@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ShortyShotgun : Gun
 {
-    public float crit_chance;
     public int capacity;
     public float range = 6;
     public float reloadtime;
@@ -17,17 +16,16 @@ public class ShortyShotgun : Gun
         return "Shorty Shotty";
     }
     
-    public float jam_rate = 0.3f; // this should be high for this gun I assume this is 30% chance
+    public float shell_miss_rate = 0.2f; //Shell doesn't fire.
 
+    // Looking for 33 DPS. this gun holds 4 rounds 30 damage a piece = 120 / 3s =  40. Also, it jams.
     public override Gun spawn(float rarity)
     {
         ShortyShotgun s = new ShortyShotgun();
-        s.crit_chance = rarity / 30f; // Worst gun never crits, best gun crits 30%
-        s.capacity = 4 + (int)(rarity / 0.1f); //up to 10 extra bullets
-        s.jam_rate = (1f - rarity) / 30; // TODO: copied from m4. need to adjust should be high
-        s.reloadtime = 6 - ((rarity / 0.2f) * capacity); // should be based on how many shells have been fired
-        s.spread = 40 - (7 * UnityEngine.Random.Range(0f, rarity));
-        s.burst_size = 3 + (int)(rarity / 0.5f);
+        s.capacity = 4 + (int)(rarity * 5); //up to 10 extra bullets
+        s.reloadtime = s.capacity;
+        s.spread = 25 - ( UnityEngine.Random.Range(0f, 30 * rarity));
+        s.burst_size = 4 + (int)(rarity * 2);
         return s;
     }
 
@@ -42,10 +40,10 @@ public class ShortyShotgun : Gun
             b.accuracy_modifier_degree = UnityEngine.Random.Range(-spread, spread);
             b.is_crit = false;
             b.projectile = Projectile.ProjectileType.Bullet;
-            b.range = range; // TODO: also not sure what this effects, and speed should also be slower
+            b.range = Random.Range(5,15);
             b.speed = speed;
-            // jams, wont fire.
-            if (Random.Range(0f, 1f) > jam_rate)
+            // missing shell
+            if (Random.Range(0f, 1f) > shell_miss_rate)
             {
                 fp.Add(b);
             }
