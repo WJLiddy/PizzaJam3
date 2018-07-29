@@ -74,9 +74,9 @@ public class TileRenderer : MonoBehaviour
                 {
                     renderExtractedResource(gs.tiles_[x, y] as ExtractedResource, x, y);
                 }
-                else if (gs.tiles_[x, y] is Storage)
+                else if (gs.tiles_[x, y] is Building)
                 {
-                    renderStorage(gs.tiles_[x, y] as Storage, x, y);
+                    renderBuilding(gs.tiles_[x, y] as Storage, x, y);
                 }
 
             }
@@ -96,20 +96,12 @@ public class TileRenderer : MonoBehaviour
         tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
     }
 
-    void renderStorage(Storage r, int x, int y)
+    void renderBuilding(Building r, int x, int y)
     {
-        Sprite s = null;
-        switch (r.type)
-        {
-            case Resource.Type.OIL: s = sd["refinery"]; break;
-            case Resource.Type.ORE: s = sd["forge"]; break;
-            case Resource.Type.WOOD: s =sd["sawmill"]; break;
-        }
+        Sprite s = sd[r.renderName()];
         tiles[x, y].GetComponent<SpriteRenderer>().sprite = s;
     }
-
-
-
+    
     void renderResource(Resource r,int x, int y)
     {
         Sprite s = null;

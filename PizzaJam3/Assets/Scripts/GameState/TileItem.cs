@@ -6,3 +6,8 @@ public class TileItem
 {
   
 }
+
+public interface Building
+{
+    string renderName();
+}
