@@ -39,7 +39,7 @@ public class GameRenderer : MonoBehaviour
         gs.player = new Player();
         pr.addPlayer(gs);
         pr.p.gr = this; //disgusting
-        gs.player.gun1 = (new M4()).spawn(0.5f);
+        gs.player.gun1 = (new RPG()).spawn(0.5f);
         gs.player.gun2 = (new PumpShotgun()).spawn(1f);
         gs.time_hr = 19;
 
