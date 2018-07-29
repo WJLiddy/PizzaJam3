@@ -12,7 +12,14 @@ public class Swarmer : Baddie
 
     public override void doAI(IntVec2 pos, GameState gs)
     {
+
+        anim = Animation.IDLE;
         IntVec2 iv = find(pos, gs, validTarget);
+        if(iv == null)
+        {
+            return;
+        }
+        Debug.Assert(pos != null);
         shootProjectile(pos, Projectile.ProjectileType.Bullet, iv, 1, 3);
         if(iv != null)
         {
@@ -32,10 +39,6 @@ public class Swarmer : Baddie
         return 100;
     }
 
-    public override int getVisibility()
-    {
-        throw new NotImplementedException();
-    }
 
     public override bool isFriendly()
     {

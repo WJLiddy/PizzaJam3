@@ -22,6 +22,11 @@ public class BuildPanel : MonoBehaviour
         }
         tu.gr = gr;
         gs.placeItemNear(tu, new IntVec2((int)gs.player.location.x, (int)gs.player.location.y));
+
+        if (tu is GuardTower)
+        {
+            gr.addGuardLight(new IntVec2((int)gs.player.location.x, (int)gs.player.location.y));
+        }
     }
 
     public void activate()

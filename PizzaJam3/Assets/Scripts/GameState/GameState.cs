@@ -247,7 +247,7 @@ public class GameState
         tu.anim = TileUnit.Animation.IDLE;
     }
 
-    public void tick()
+    public void tick(GameRenderer gr)
     {
         for(int x = 0; x != dim_; ++x)
         {
@@ -270,6 +270,11 @@ public class GameState
         {
             time_min -= 60;
             time_hr++;
+
+            if(time_hr < 4 || time_hr > 22)
+            {
+                baddieSpawn(gr);
+            }
         }
         if(time_hr > 23)
         {
@@ -297,6 +302,38 @@ public class GameState
 
                 }
 
+            }
+        }
+    }
+
+    public bool flighthouse(TileItem t)
+    {
+        return (t is GuardTower);
+    }
+    //Spawn 70 meters away from lighthouses.
+    public void baddieSpawn(GameRenderer gr)
+    {
+        for(int i = 0; i != (dim_ * dim_) / 500; ++i)
+        {
+            int x = (int)Random.Range(0, dim_);
+            int y = (int)Random.Range(0, dim_);
+
+            if(tiles_[x,y] == null)
+            {
+                Baddie b = new Swarmer();
+                b.anim = TileUnit.Animation.IDLE;
+                b.gr = gr;
+                var v = b.find(new IntVec2(x, y), this, flighthouse);
+                if(v == null)
+                {
+                    tiles_[x, y] = b;
+                    continue;
+                }
+
+                if(Vector2.Distance(new Vector2(x,y),new Vector2(v.x,v.y)) > 70)
+                {
+                    tiles_[x, y] = b;
+                }
             }
         }
     }

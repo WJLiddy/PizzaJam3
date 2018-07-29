@@ -8,8 +8,10 @@ public class GameRenderer : MonoBehaviour
 {
     public GameObject dfloats;
     public BuildPanel bp;
+    // FUCK SHIT AAAAAAAAAAAAAHHHHHHHHHHHHHHHH
+    public Dictionary<IntVec2, GameObject> guardlights = new Dictionary<IntVec2, GameObject>();
     GameState gs;
-    public static readonly float TICK_TIME = 0.5f;
+    public static readonly float TICK_TIME = 0.05f;
     public TileRenderer tr;
     public PlayerRenderer pr;
     public Light l;
@@ -47,6 +49,8 @@ public class GameRenderer : MonoBehaviour
 
         gs.process(); //sets up animations and moves.
 
+        bp.gr = this;
+
     }
 
     public void showOptions(TileItem tu)
@@ -63,6 +67,21 @@ public class GameRenderer : MonoBehaviour
         }
     }
 
+    public void addGuardLight( IntVec2 iv)
+    {
+        GameObject go = Instantiate(Resources.Load<GameObject>("tower_light"));
+        go.transform.SetParent(this.transform);
+        go.transform.localPosition = new Vector3(iv.x, iv.y, -4);
+        guardlights[iv] = go;
+    }
+
+    public void towersUpdate(GameState gs)
+    {
+        foreach(var v in guardlights.Values)
+        {
+            v.SetActive(gs.time_hr < 6 || gs.time_hr > 20);
+        }
+    }
     public void hideOptions()
     {
         bItem1.SetActive(false);
@@ -125,14 +144,16 @@ public class GameRenderer : MonoBehaviour
         tick_time_left -= Time.deltaTime;
         if (tick_time_left < 0)
         { 
-            gs.tick(); // actually moves the units. 
+            gs.tick(this); // actually moves the units. 
             gs.process(); //sets up animations and moves.
             tr.DrawState(gs,false); // all animation information is lost!
             tick_time_left = TICK_TIME;
             l.color = getLighting(gs.time_hr, gs.time_min);
             time.text = getTime(gs.time_hr, gs.time_min);
             updateResourceCount();
+            towersUpdate(gs);
         }
+        
     }
 
     public Color getLighting(int hr, int min)
