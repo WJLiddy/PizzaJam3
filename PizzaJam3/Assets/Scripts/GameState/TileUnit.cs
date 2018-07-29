@@ -27,7 +27,7 @@ public abstract class TileUnit : TileItem
         HP = getMaxHP();
     }
 
-    public void hurt(int dmg, out bool dead)
+    public virtual void hurt(int dmg, out bool dead)
     {
         HP -= dmg;
         if(HP <= 0)

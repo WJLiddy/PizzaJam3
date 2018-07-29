@@ -54,6 +54,11 @@ public class GameState
 
     public int time_hr;
     public int time_min;
+
+
+    // BALANCE CONSTANTS WOOO
+
+
     // Players start at north west, baddies in south east.
     public GameState(int dim)
     {
@@ -347,12 +352,12 @@ public class GameState
         }
         day++;
     }
-    //Spawn 70 meters away from lighthouses.
+
     public void baddieSpawn(GameRenderer gr)
     {
-            int to_spawn = 5 + 5 * (int)Mathf.Pow(day,1.5f);
+            int to_spawn = 2 * day;
             float ang = 0;
-            int range = 20;
+            int range = 10;
             int x = 0;
             int y = 0;
 
@@ -373,7 +378,7 @@ public class GameState
                         //OK!
                         to_spawn--;
                     }
-                    else if (Vector2.Distance(new Vector2(x, y), new Vector2(v.x, v.y)) > 20)
+                    else if (Vector2.Distance(new Vector2(x, y), new Vector2(v.x, v.y)) > 10)
                     {
                         tiles_[x, y] = b;
                         //OK!

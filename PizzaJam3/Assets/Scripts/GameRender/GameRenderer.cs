@@ -11,7 +11,9 @@ public class GameRenderer : MonoBehaviour
     // FUCK SHIT AAAAAAAAAAAAAHHHHHHHHHHHHHHHH
     public Dictionary<IntVec2, GameObject> guardlights = new Dictionary<IntVec2, GameObject>();
     GameState gs;
-    public static readonly float TICK_TIME = 0.5f;
+    bool in_ai_phase = false;
+    public static readonly float AI_TIME = 0.5f;
+    public static readonly float DRAW_TIME = 0.5f;
     public TileRenderer tr;
     public PlayerRenderer pr;
     public Light l;
@@ -38,6 +40,8 @@ public class GameRenderer : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        Application.targetFrameRate = 30;
+        QualitySettings.vSyncCount = 0;
         gs = new GameState(100);
         gs.addClearing(new IntVec2(0, 0), 10);
         gs.tiles_[0, 0] = new HarvesterRobot(Resource.Type.WOOD);
@@ -194,34 +198,48 @@ public class GameRenderer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        animSet a;
-        if(gs.processOne(ref GLOBAL_ANIM_X, ref GLOBAL_ANIM_Y,out a))
+        if (in_ai_phase)
         {
-            ANIMSETS.Add(a);
+            animSet a;
+            if (gs.processOne(ref GLOBAL_ANIM_X, ref GLOBAL_ANIM_Y, out a))
+            {
+                ANIMSETS.Add(a);
+            }
         }
 
         tick_time_left -= Time.deltaTime;
+
         if (tick_time_left < 0)
         {
-            applyAnimSets(ANIMSETS);
-            ANIMSETS.Clear();
-            if (GLOBAL_ANIM_X != gs.dim_ || GLOBAL_ANIM_Y != 0)
+            if (in_ai_phase)
             {
-                Debug.Log("failed to render in time!");
-                Debug.Log(gs.time_hr);
-            }
-            else
+                applyAnimSets(ANIMSETS);
+                ANIMSETS.Clear();
+                if (GLOBAL_ANIM_X != gs.dim_ || GLOBAL_ANIM_Y != 0)
+                {
+                    Debug.Log("failed to render in time!");
+                    Debug.Log(gs.time_hr);
+                }
+                else
+                {
+                    GLOBAL_ANIM_X = 0;
+                    GLOBAL_ANIM_Y = 0;
+                }
+                in_ai_phase = false;
+                tr.DrawState(gs,false);
+                tick_time_left = AI_TIME;
+            } else
             {
-                GLOBAL_ANIM_X = 0;
-                GLOBAL_ANIM_Y = 0;
+                //draw state ended, put people down.
+                gs.tick(this); // actually moves the units. 
+                tr.DrawState(gs, false); // all animation information is lost, but Ai is now thinking.
+                tick_time_left = DRAW_TIME;
+                l.color = getLighting(gs.time_hr, gs.time_min);
+                time.text = getTime(gs.time_hr, gs.time_min);
+                updateResourceCount();
+                towersUpdate(gs);
+                in_ai_phase = true;
             }
-            gs.tick(this); // actually moves the units. 
-            tr.DrawState(gs,false); // all animation information is lost!
-            tick_time_left = TICK_TIME;
-            l.color = getLighting(gs.time_hr, gs.time_min);
-            time.text = getTime(gs.time_hr, gs.time_min);
-            updateResourceCount();
-            towersUpdate(gs);
         }
     }
 

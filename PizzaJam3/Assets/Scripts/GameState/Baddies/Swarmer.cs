@@ -25,7 +25,6 @@ public class Swarmer : Baddie
         {
             shootProjectile(pos, Projectile.ProjectileType.Bullet, iv, 3, 4, false);
         }
-
         if(iv != null)
         {
             var r = getPath(pos, iv, gs);
