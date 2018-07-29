@@ -30,7 +30,7 @@ public class RPG : Gun
         Gun.FiredProjectile b;
         b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
         b.is_crit = false;
-        b.projectile = Projectile.ProjectileType.Bullet; // needs replaced by rocket
+        b.projectile = Projectile.ProjectileType.Rocket;
         b.range = 10;
         b.speed = 10f;
         fp.Add(b);
