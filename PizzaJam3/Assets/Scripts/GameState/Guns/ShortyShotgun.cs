@@ -10,7 +10,7 @@ public class ShortyShotgun : Gun
     public float reloadtime;
     public float speed = 6;
     public float spread;
-    public bool consumeMultipleAmmoPerFire = false;
+    
     public int burst_size;
     public override string getName()
     {
@@ -73,5 +73,10 @@ public class ShortyShotgun : Gun
     public override bool isFullAuto()
     {
         return false; // unlike the proper shotgun this one should not be full auto
+    }
+
+    public override bool consumeMultipleAmmoPerFire()
+    {
+        return false;
     }
 }

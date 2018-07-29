@@ -24,4 +24,5 @@ public abstract class Gun
     public abstract float getReloadTime(); // in seconds.
     public abstract bool isFullAuto();
     public abstract float getROF();
+    public abstract bool consumeMultipleAmmoPerFire();
 }

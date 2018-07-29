@@ -9,7 +9,7 @@ public class TightCannon : Gun
     public float range;
     public float speed;
     public float reloadtime;
-    public bool consumeMultipleAmmoPerFire = false;
+    
 
     public override string getName()
     {
@@ -60,6 +60,11 @@ public class TightCannon : Gun
     }
 
     public override bool isFullAuto()
+    {
+        return false;
+    }
+
+    public override bool consumeMultipleAmmoPerFire()
     {
         return false;
     }

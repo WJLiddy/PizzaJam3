@@ -6,7 +6,7 @@ using UnityEngine;
 public class M4: Gun
 {
     public float jam_rate = 0;
-    public bool consumeMultipleAmmoPerFire = false;
+    
 
     public override string getName()
     {
@@ -31,7 +31,7 @@ public class M4: Gun
         b.is_crit = false;
         b.projectile = Projectile.ProjectileType.Bullet;
         b.range = 9;
-        b.speed = 3f;
+        b.speed = 6f;
         // jams, wont fire.
         if (Random.Range(0f, 1f) > jam_rate)
         {
@@ -59,5 +59,10 @@ public class M4: Gun
     public override bool isFullAuto()
     {
         return true;
+    }
+
+    public override bool consumeMultipleAmmoPerFire()
+    {
+        return false;
     }
 }

@@ -16,7 +16,7 @@ public class PumpShotgun : Gun
     }
     public float jam_rate = 0.1f; // this should be high for this gun I assume this is 10% chance
     public bool fullauto;
-    public bool consumeMultipleAmmoPerFire = false;
+   
     public int burst_size;
 
     public override Gun spawn(float rarity)
@@ -75,4 +75,10 @@ public class PumpShotgun : Gun
     {
         return fullauto;
     }
+
+    public override bool consumeMultipleAmmoPerFire()
+    {
+        return false;
+    }
+
 }

@@ -10,7 +10,7 @@ public class MP5 : Gun
     public int burst_size;
     public float spread;
     public float range;
-    public bool consumeMultipleAmmoPerFire = false;
+    
 
     public override string getName()
     {
@@ -71,6 +71,11 @@ public class MP5 : Gun
     }
 
     public override bool isFullAuto()
+    {
+        return false;
+    }
+
+    public override bool consumeMultipleAmmoPerFire()
     {
         return false;
     }

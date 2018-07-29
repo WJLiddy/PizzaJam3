@@ -10,7 +10,7 @@ public class Revolver : Gun
     public float range;
     public float reloadtime;
     public float speed = 6;
-    public bool consumeMultipleAmmoPerFire = false;
+
 
     public override string getName()
     {
@@ -61,6 +61,11 @@ public class Revolver : Gun
     }
 
     public override bool isFullAuto()
+    {
+        return false;
+    }
+
+    public override bool consumeMultipleAmmoPerFire()
     {
         return false;
     }

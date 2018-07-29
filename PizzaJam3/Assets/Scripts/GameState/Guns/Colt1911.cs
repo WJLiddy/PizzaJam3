@@ -8,7 +8,7 @@ public class M1911 : Gun
     public float crit_chance;
     public float range;
     public int capacity;
-    public bool consumeMultipleAmmoPerFire = false;
+    
 
     public override string getName()
     {
@@ -56,6 +56,11 @@ public class M1911 : Gun
     }
 
     public override bool isFullAuto()
+    {
+        return false;
+    }
+
+    public override bool consumeMultipleAmmoPerFire()
     {
         return false;
     }
