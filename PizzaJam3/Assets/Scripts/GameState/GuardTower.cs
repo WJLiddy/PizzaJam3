@@ -60,7 +60,7 @@ public class GuardTower : TileUnit, Robot, Building //This interface is FUCKED
 
     public override int getMaxHP()
     {
-        return 1000;
+        return BALANCE_CONSTANTS.TOWER_HP;
     }
 
     public override bool isFriendly()

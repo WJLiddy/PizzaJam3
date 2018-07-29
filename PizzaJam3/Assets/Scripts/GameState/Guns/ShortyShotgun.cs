@@ -41,7 +41,7 @@ public class ShortyShotgun : Gun
             
             b.accuracy_modifier_degree = UnityEngine.Random.Range(-spread, spread);
             b.is_crit = false;
-            b.projectile = Projectile.ProjectileType.Fletchette;
+            b.projectile = Projectile.ProjectileType.Bullet;
             b.range = range; // TODO: also not sure what this effects, and speed should also be slower
             b.speed = speed;
             // jams, wont fire.

@@ -6,8 +6,6 @@ using UnityEngine;
 public class Storage : TileUnit, Building
 {
     public Resource.Type type;
-    public int amount;
-    public static int MAX_AMOUNT = 100;
     public string nameof;
 
     public Storage(Resource.Type t)
@@ -18,14 +16,13 @@ public class Storage : TileUnit, Building
             case Resource.Type.ORE: nameof =  "foundry"; break;
             case Resource.Type.WOOD: nameof = "sawmill"; break;
         }
-        amount = 0;
         type = t;
         anim = Animation.IDLE;
     }
 
     public override int getMaxHP()
     {
-        return 100;
+        return BALANCE_CONSTANTS.WAREHOUSE_HP;
     }
 
     public override bool isFriendly()

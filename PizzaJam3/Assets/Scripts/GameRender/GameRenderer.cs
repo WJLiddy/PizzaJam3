@@ -26,7 +26,8 @@ public class GameRenderer : MonoBehaviour
 
     public GameObject itemSlot1;
     public GameObject itemSlot2;
-
+    public GameObject itemSlot1ReloadRem;
+    public GameObject itemSlot2ReloadRem;
     public struct animSet
     {
         public IntVec2 start;
@@ -47,13 +48,18 @@ public class GameRenderer : MonoBehaviour
         gs.tiles_[0, 0] = new HarvesterRobot(Resource.Type.WOOD);
         gs.tiles_[1, 0] = new CollectorRobot(Resource.Type.WOOD);
         gs.tiles_[2, 0] = new Storage(Resource.Type.WOOD);
+        gs.player_wood = 2000;
+
+        //temp.
+        gs.player_ore = 3000;
+        gs.time_hr = 19;
+       
         tr.Setup(gs);
         gs.player = new Player();
         pr.addPlayer(gs);
         pr.p.gr = this; //disgusting
-        gs.player.gun1 = (new M4()).spawn(0.5f);
-        gs.player.gun2 = (new PumpShotgun()).spawn(1f);
-        gs.time_hr = 19;
+        gs.player.gun1 = (new Revolver()).spawn(0f);
+        gs.player.gun2 = (new Revolver()).spawn(0f);
 
         bp.gs = gs;
 
@@ -99,8 +105,25 @@ public class GameRenderer : MonoBehaviour
         {
             bItem1.SetActive(true);
             bItem2.SetActive(true);
-            bItem1.GetComponentInChildren<Text>().text = "Make Harvester";
-            bItem2.GetComponentInChildren<Text>().text = "Make Collector";
+
+            int[] costof1 = null;
+            switch ((tu as Storage).type)
+            {
+                case Resource.Type.OIL: costof1 = BALANCE_CONSTANTS.REFINERY_WORKER_COST; break;
+                case Resource.Type.WOOD: costof1 = BALANCE_CONSTANTS.SAWMILL_WORKER_COST; break;
+                case Resource.Type.ORE: costof1 = BALANCE_CONSTANTS.FOUNDRY_WORKER_COST; break;
+            }
+
+            int[] costof2 = null;
+            switch ((tu as Storage).type)
+            {
+                case Resource.Type.OIL: costof2 = BALANCE_CONSTANTS.REFINERY_COLLECTOR_COST; break;
+                case Resource.Type.WOOD: costof2 = BALANCE_CONSTANTS.SAWMILL_COLLECTOR_COST; break;
+                case Resource.Type.ORE: costof2 = BALANCE_CONSTANTS.FOUNDRY_COLLECTOR_COST; break;
+            }
+
+            bItem1.GetComponentInChildren<Text>().text = "Make Harvester\n" + gs.priceRenderNoNewline(costof1);
+            bItem2.GetComponentInChildren<Text>().text = "Make Collector\n" + gs.priceRenderNoNewline(costof2);
         } else
         if(tu is GuardTower)
         {
@@ -277,16 +300,36 @@ public class GameRenderer : MonoBehaviour
         Player p = gs.player;
         IntVec2 v = pr.p.getLookAt();
         TileItem t = gs.getItem(v);
+
         if (t is Storage)
         {
+            int[] costof = null;
             if(opt == 1)
             {
-                gs.placeItemNear(new HarvesterRobot((t as Storage).type), v);
+                switch ((t as Storage).type)
+                {
+                    case Resource.Type.OIL: costof = BALANCE_CONSTANTS.REFINERY_WORKER_COST; break;
+                    case Resource.Type.WOOD: costof = BALANCE_CONSTANTS.SAWMILL_WORKER_COST; break;
+                    case Resource.Type.ORE: costof = BALANCE_CONSTANTS.FOUNDRY_WORKER_COST; break;
+                }
+                if (gs.tryBuy(costof))
+                {
+                    gs.placeItemNear(new HarvesterRobot((t as Storage).type), v);
+                }
             }
 
             if(opt == 2)
             {
-                gs.placeItemNear(new CollectorRobot((t as Storage).type), v);
+                switch ((t as Storage).type)
+                {
+                    case Resource.Type.OIL: costof = BALANCE_CONSTANTS.REFINERY_COLLECTOR_COST; break;
+                    case Resource.Type.WOOD: costof = BALANCE_CONSTANTS.SAWMILL_COLLECTOR_COST; break;
+                    case Resource.Type.ORE: costof = BALANCE_CONSTANTS.FOUNDRY_COLLECTOR_COST; break;
+                }
+                if (gs.tryBuy(costof))
+                {
+                    gs.placeItemNear(new CollectorRobot((t as Storage).type), v);
+                }
             }
         }
 

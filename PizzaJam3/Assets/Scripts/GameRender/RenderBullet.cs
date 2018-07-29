@@ -11,7 +11,6 @@ public class RenderBullet : MonoBehaviour
     public bool is_crit;
     public float range;
     public Vector2 start;
-    int dmg = 10;
     bool startSet = false;
     public bool friendlyBullet;
 
@@ -42,7 +41,7 @@ public class RenderBullet : MonoBehaviour
                     return;
                 }
             }
-
+            int dmg = UnityEngine.Random.Range(7, 11);
             bool damaged = gs.hurt(x,y,dmg, out stop);
             if(damaged)
             {

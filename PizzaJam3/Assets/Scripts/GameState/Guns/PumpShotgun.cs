@@ -8,7 +8,7 @@ public class PumpShotgun : Gun
     public int capacity;
     public float range = 6;
     public float reloadtime;
-    public float speed = 4;
+    public float speed = 5;
     public float spread;
     public override string getName()
     {
@@ -42,7 +42,7 @@ public class PumpShotgun : Gun
             
             b.accuracy_modifier_degree = UnityEngine.Random.Range(-spread, spread);
             b.is_crit = false;
-            b.projectile = Projectile.ProjectileType.Fletchette;
+            b.projectile = Projectile.ProjectileType.Bullet;
             b.range = range; // TODO: also not sure what this effects, and speed should also be slower
             b.speed = speed;
             // jams, wont fire.

@@ -42,14 +42,9 @@ public class MP5 : Gun
             b.is_crit = is_crits;
             b.projectile = Projectile.ProjectileType.Bullet;
 
-            // 1 in 100 chance to instead shoot a fletchette, because why not?
-            if (UnityEngine.Random.Range(0f, 1f) < 0.01)
-            {
-                b.projectile = Projectile.ProjectileType.Fletchette;
-            }
 
             b.range = range;
-            b.speed = 3f + Random.Range(0f,2f);
+            b.speed = 4f + Random.Range(0f,2f);
             fp.Add(b);
         }
         return fp;

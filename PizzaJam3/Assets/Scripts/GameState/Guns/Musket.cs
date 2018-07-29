@@ -27,7 +27,7 @@ public class Musket : Gun {
         Gun.FiredProjectile b;
         b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
         b.is_crit = false;
-        b.projectile = Projectile.ProjectileType.MusketBall;
+        b.projectile = Projectile.ProjectileType.Bullet;
         b.range = 9;
         b.speed = 5f;      
         fp.Add(b);

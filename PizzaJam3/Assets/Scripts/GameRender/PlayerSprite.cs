@@ -7,7 +7,7 @@ public class PlayerSprite : MonoBehaviour
 {
 
     float speedmod = 3.0f;
-    float animTime = 0.5f;
+    float animTime = 0.1f;
     float animTimeMax = 0.5f;
     float cbox_radius = 0.2f;
 
@@ -96,7 +96,7 @@ public class PlayerSprite : MonoBehaviour
 
         if (animcode != "")
         {
-            GetComponent<SpriteRenderer>().sprite = sprs[animcode + (animTime <= 0 ? "2" : "")];
+            GetComponentInChildren<SpriteRenderer>().sprite = sprs[animcode + (animTime <= 0 ? "2" : "")];
             animTime -= Time.deltaTime;
             if (animTime < -animTimeMax)
             {
@@ -138,6 +138,7 @@ public class PlayerSprite : MonoBehaviour
         {
             gr.itemSlot1.GetComponentInChildren<Text>().text = gs.player.gun1.getName() + "\n" +
                 ((reload_timer_1 > 0) ? "reloading" : gs.player.gun1.bulletsLeft + "/" + gs.player.gun1.getCapacity());
+            gr.itemSlot1ReloadRem.SetActive(gs.player.gun1.bulletsLeft == 0);
         } else
         {
             gr.itemSlot1.GetComponentInChildren<Text>().text = "None";
@@ -147,6 +148,8 @@ public class PlayerSprite : MonoBehaviour
         {
             gr.itemSlot2.GetComponentInChildren<Text>().text = gs.player.gun2.getName() + "\n" +
             ((reload_timer_2 > 0) ? "reloading" : gs.player.gun2.bulletsLeft + "/" + gs.player.gun2.getCapacity());
+
+            gr.itemSlot2ReloadRem.SetActive(gs.player.gun2.bulletsLeft == 0);
         } else
         {
             gr.itemSlot2.GetComponentInChildren<Text>().text = "None";
@@ -167,39 +170,43 @@ public class PlayerSprite : MonoBehaviour
             reload_timer_2 = gs.player.gun2.getReloadTime();
         }
 
-        if (Input.GetMouseButton(0) && gs.player.gun1 != null && reload_timer_1 <= 0 && auto_recoil_timer_1 <= 0)
+        // no shoot if over ui.
+        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
-            if (!gun1_did_fire_last_frame || gs.player.gun1.isFullAuto())
+            if (Input.GetMouseButton(0) && gs.player.gun1 != null && reload_timer_1 <= 0 && auto_recoil_timer_1 <= 0)
             {
-                if(gs.player.gun1.isFullAuto())
+                if (!gun1_did_fire_last_frame || gs.player.gun1.isFullAuto())
                 {
-                    auto_recoil_timer_1 = gs.player.gun1.getROF();
+                    if (gs.player.gun1.isFullAuto())
+                    {
+                        auto_recoil_timer_1 = gs.player.gun1.getROF();
+                    }
+
+                    gun1_did_fire_last_frame = true;
+                    shootGun(gr, gs.player.gun1);
                 }
-
-                gun1_did_fire_last_frame = true;
-                shootGun(gr, gs.player.gun1);
             }
-        }
-        else
-        {
-            gun1_did_fire_last_frame = false;
-        }
-
-        if (Input.GetMouseButton(1) && gs.player.gun2 != null && reload_timer_2 <= 0 && auto_recoil_timer_2 <= 0)
-        {
-            if (!gun2_did_fire_last_frame || gs.player.gun2.isFullAuto())
+            else
             {
-                if (gs.player.gun2.isFullAuto())
-                {
-                    auto_recoil_timer_2 = gs.player.gun2.getROF();
-                }
-                gun2_did_fire_last_frame = true;
-                shootGun(gr, gs.player.gun2);
+                gun1_did_fire_last_frame = false;
             }
-        }
-        else
-        {
-            gun2_did_fire_last_frame = false;
+
+            if (Input.GetMouseButton(1) && gs.player.gun2 != null && reload_timer_2 <= 0 && auto_recoil_timer_2 <= 0)
+            {
+                if (!gun2_did_fire_last_frame || gs.player.gun2.isFullAuto())
+                {
+                    if (gs.player.gun2.isFullAuto())
+                    {
+                        auto_recoil_timer_2 = gs.player.gun2.getROF();
+                    }
+                    gun2_did_fire_last_frame = true;
+                    shootGun(gr, gs.player.gun2);
+                }
+            }
+            else
+            {
+                gun2_did_fire_last_frame = false;
+            }
         }
 
         if(reload_timer_1 > 0)
@@ -227,7 +234,7 @@ public class PlayerSprite : MonoBehaviour
 
     IntVec2 getFacing()
     {
-        switch (GetComponent<SpriteRenderer>().sprite.name)
+        switch (GetComponentInChildren<SpriteRenderer>().sprite.name)
         {
             case "u": case "u2": return new IntVec2(0, 1);
             case "ur": case "ur2": return new IntVec2(1, 1);
@@ -262,7 +269,6 @@ public class PlayerSprite : MonoBehaviour
     {
         doAnim();
 
-        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             gunHandler();
 
         optionsWatchdog();

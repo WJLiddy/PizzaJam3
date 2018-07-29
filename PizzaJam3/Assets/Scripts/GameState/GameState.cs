@@ -45,9 +45,12 @@ public class IntVec2
 
 public class GameState
 {
+    public int player_wood;
+    public int player_ore;
+    public int player_oil;
     int day = 1;
     public static readonly float TREE_THRESH = 0.5f;
-    public static readonly int minutes_per_tick = 5;
+    public static readonly int minutes_per_tick = 4;
     public int dim_;
     public TileItem[,] tiles_;
     public Player player;
@@ -99,7 +102,7 @@ public class GameState
     public void addOres()
     {
         // one ore per 20 by 20
-        for(int i = 0; i != ((dim_*dim_) / 500); ++i)
+        for(int i = 0; i != ((dim_*dim_) / 300); ++i)
         {
             Resource.AddOre(this,new IntVec2(Random.Range(0, dim_), Random.Range(0,dim_)));
         }
@@ -107,7 +110,7 @@ public class GameState
 
     public void addOils()
     {    
-        for (int i = 0; i != ((dim_ * dim_) / 1000); ++i)
+        for (int i = 0; i != ((dim_ * dim_) / 700); ++i)
         {
             Resource.AddOil(this,new IntVec2(Random.Range(0, dim_), Random.Range(0, dim_)));
         }
@@ -160,7 +163,8 @@ public class GameState
             for (; y_start < dim_; ++y_start)
             {
 
-                if (tiles_[x_start, y_start] != null && tiles_[x_start, y_start] is Robot && time_hr > 5 && time_hr < 21)
+                if (tiles_[x_start, y_start] != null && tiles_[x_start, y_start] is Robot 
+                    && (tiles_[x_start, y_start] is GuardTower || (time_hr > 5 && time_hr < 21)))
                 {
                     a.start = new IntVec2(x_start, y_start);
                     (tiles_[x_start, y_start] as Robot).doRobotAI(new IntVec2(x_start, y_start), this, ref a.anim, ref a.animType);
@@ -270,6 +274,19 @@ public class GameState
         tu.anim = TileUnit.Animation.IDLE;
     }
 
+
+    public string priceRender(int[] res)
+    {
+        return "Wood: " + res[0] + "\nOre: " + res[1] + "\nOil: " + res[2];
+    }
+
+    public string priceRenderNoNewline(int[] res)
+    {
+        return "Wood: " + res[0] + " Ore: " + res[1] + " Oil: " + res[2];
+    }
+
+
+
     public void tick(GameRenderer gr)
     {
         for(int x = 0; x != dim_; ++x)
@@ -311,26 +328,22 @@ public class GameState
 
     public void resourceCount(out int wood, out int ore, out int oil)
     {
-        oil = 0;
-        wood = 0;
-        ore = 0;
-        for (int i = 0; i != dim_; ++i)
+        oil = player_oil;
+        wood = player_wood;
+        ore = player_ore;
+    }
+
+    public bool tryBuy(int[] i)
+    {
+        if(player_wood >= i[0] && player_ore >= i[1] && player_oil >= i[2])
         {
-            for (int j = 0; j != dim_; ++j)
-            {
-                if(getItem(new IntVec2(i,j)) != null && getItem(new IntVec2(i, j)) is Storage)
-                {
-                    switch ((getItem(new IntVec2(i, j)) as Storage).type)
-                    {
-                        case Resource.Type.OIL: oil += (getItem(new IntVec2(i, j)) as Storage).amount; break;
-                        case Resource.Type.WOOD: wood += (getItem(new IntVec2(i, j)) as Storage).amount; break;
-                        case Resource.Type.ORE: ore += (getItem(new IntVec2(i, j)) as Storage).amount; break;
-                    }
 
-                }
-
-            }
+            player_wood -= i[0];
+            player_ore -= i[1];
+            player_oil -= i[2];
+            return true;
         }
+        return false;
     }
 
     public bool flighthouse(TileItem t)
@@ -355,7 +368,7 @@ public class GameState
 
     public void baddieSpawn(GameRenderer gr)
     {
-            int to_spawn = 2 * day;
+            int to_spawn = day;
             float ang = 0;
             int range = 10;
             int x = 0;

@@ -95,7 +95,12 @@ public class CollectorRobot : TileUnit, Robot
         {
             return;
         }
-        r.amount += amount;
+        switch ((gs.getItem(pos) as Storage).type)
+        {
+            case Resource.Type.WOOD: gs.player_wood += amount; break;
+            case Resource.Type.ORE: gs.player_ore += amount; break;
+            case Resource.Type.OIL: gs.player_oil += amount; break;
+        }
         amount = 0;
     }
 
@@ -120,7 +125,7 @@ public class CollectorRobot : TileUnit, Robot
 
     public override int getMaxHP()
     {
-        return 10;
+        return BALANCE_CONSTANTS.WORKER_HP;
     }
 
     public override bool isFriendly()

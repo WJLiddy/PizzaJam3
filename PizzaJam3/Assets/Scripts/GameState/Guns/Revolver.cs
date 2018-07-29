@@ -9,7 +9,6 @@ public class Revolver : Gun
     public int capacity;
     public float range;
     public float reloadtime;
-    public float speed = 6;
 
 
     public override string getName()
@@ -37,7 +36,7 @@ public class Revolver : Gun
         b.is_crit = UnityEngine.Random.Range(0f, 1f) < crit_chance;
         b.projectile = Projectile.ProjectileType.Bullet;
         b.range = range; 
-        b.speed = 4f;
+        b.speed = 5f;
    
         
         fp.Add(b);
