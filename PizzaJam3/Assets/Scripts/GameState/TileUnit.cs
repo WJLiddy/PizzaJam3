@@ -171,7 +171,7 @@ public abstract class TileUnit : TileItem
         Gun.FiredProjectile fp;
         fp.accuracy_modifier_degree = 0;
         fp.is_crit = false;
-        fp.projectile = Projectile.ProjectileType.Bullet;
+        fp.projectile = pt;
         fp.range = range;
         fp.speed = velocity;
 

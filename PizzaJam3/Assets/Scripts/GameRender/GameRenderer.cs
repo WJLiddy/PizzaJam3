@@ -58,8 +58,9 @@ public class GameRenderer : MonoBehaviour
         gs.time_hr = 9;
 
 
-   
 
+        
+        gs.time_hr = 20;
         gs.tiles_[4, 4] = new GroundGun(new MP5().spawn(0));
         gs.tiles_[4, 5] = new GroundGun(new M4().spawn(0));
         gs.tiles_[4, 6] = new GroundGun(new PumpShotgun().spawn(0));
