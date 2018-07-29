@@ -26,14 +26,16 @@ public class CollectorRobot : TileUnit, Robot
     }
 
     // Returns current animation for this gamestate (and the next can be implied from there).
-    public void doRobotAI(IntVec2 pos, GameState gs)
+    public void doRobotAI(IntVec2 pos, GameState gs, ref IntVec2 animD, ref TileUnit.Animation animT)
     {
+        animT = Animation.IDLE;
+        animD = new IntVec2(0, 0);
         if (amount < MAX_AMOUNT)
         {
             IntVec2 r = find(pos, gs, collectable);
             if (r == null)
             {
-                anim = Animation.IDLE;
+                animT = Animation.IDLE;
             }
 
             if (r != null)
@@ -43,14 +45,14 @@ public class CollectorRobot : TileUnit, Robot
                 {
                     // 1 means we didnt go anywhere.
                     Debug.Assert(list.Count > 1);
-                    animDir = list[1] - pos;
+                    animD = list[1] - pos;
                     if (list.Count == 2)
                     {
-                        anim = Animation.COLLECT;
+                        animT = Animation.COLLECT;
                     }
                     else
                     {
-                        anim = Animation.MOVE;
+                        animT = Animation.MOVE;
                     }
                 }
             }
@@ -61,7 +63,7 @@ public class CollectorRobot : TileUnit, Robot
             IntVec2 r = find(pos, gs, dropoffable);
             if (r == null)
             {
-                anim = Animation.IDLE;
+                animT = Animation.IDLE;
             }
 
             if (r != null)
@@ -71,14 +73,14 @@ public class CollectorRobot : TileUnit, Robot
                 {
                     // 1 means we didnt go anywhere.
                     Debug.Assert(list.Count > 1);
-                    animDir = list[1] - pos;
+                    animD = list[1] - pos;
                     if (list.Count == 2)
                     {
-                        anim = Animation.STORE;
+                        animT = Animation.STORE;
                     }
                     else
                     {
-                        anim = Animation.MOVE;
+                        animT = Animation.MOVE;
                     }
                 }
             }

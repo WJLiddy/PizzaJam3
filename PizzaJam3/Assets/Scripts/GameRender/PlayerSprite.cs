@@ -119,11 +119,17 @@ public class PlayerSprite : MonoBehaviour
     public bool wouldCollide()
     {
         Vector2 lp = transform.localPosition;
-        return
-            gs.tileWouldBeOccupied((int)(0.5f + lp.x - cbox_radius), (int)(0.5f + lp.y - cbox_radius)) ||
-            gs.tileWouldBeOccupied((int)(0.5f + lp.x - cbox_radius), (int)(0.5f + lp.y + cbox_radius)) ||
-            gs.tileWouldBeOccupied((int)(0.5f + lp.x + cbox_radius), (int)(0.5f + lp.y + cbox_radius)) ||
-            gs.tileWouldBeOccupied((int)(0.5f + lp.x + cbox_radius), (int)(0.5f + lp.y - cbox_radius));
+
+        if (.5 + lp.x - cbox_radius <= 0 || .5 + lp.y - cbox_radius <= 0)
+        {
+            return true;
+        }
+            return
+            gs.tileWouldBeOccupied((int)(.5 + lp.x - cbox_radius), (int)(.5 + lp.y - cbox_radius)) ||
+            gs.tileWouldBeOccupied((int)(.5 + lp.x - cbox_radius), (int)(.5 + lp.y + cbox_radius)) ||
+            gs.tileWouldBeOccupied((int)(.5 + lp.x + cbox_radius), (int)(.5 + lp.y + cbox_radius)) ||
+            gs.tileWouldBeOccupied((int)(.5 + lp.x + cbox_radius), (int)(.5 + lp.y - cbox_radius));
+
     }
 
     void updateItemSlot()

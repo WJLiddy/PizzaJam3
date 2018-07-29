@@ -25,6 +25,16 @@ public class GameRenderer : MonoBehaviour
     public GameObject itemSlot1;
     public GameObject itemSlot2;
 
+    public struct animSet
+    {
+        public IntVec2 start;
+        public IntVec2 anim;
+        public TileUnit.Animation animType;
+    }
+
+    List<animSet> ANIMSETS;
+    int GLOBAL_ANIM_X;
+    int GLOBAL_ANIM_Y;
     // Use this for initialization
     void Start ()
     {
@@ -39,7 +49,7 @@ public class GameRenderer : MonoBehaviour
         gs.player = new Player();
         pr.addPlayer(gs);
         pr.p.gr = this; //disgusting
-        gs.player.gun1 = (new RPG()).spawn(0.5f);
+        gs.player.gun1 = (new M4()).spawn(0.5f);
         gs.player.gun2 = (new PumpShotgun()).spawn(1f);
         gs.time_hr = 19;
 
@@ -47,12 +57,39 @@ public class GameRenderer : MonoBehaviour
 
         Sound.audioSource = pr.gameObject.AddComponent<AudioSource>();
         Sound.PreLoad();
-
-        gs.process(); //sets up animations and moves.
+        List<animSet> sets = new List<animSet>();
+        int x = 0; int y = 0;
+        while (true)
+        {
+            animSet a;
+            if(!gs.processOne(ref x, ref y, out a))//sets up animations and moves.
+            {
+                break;
+            }
+            sets.Add(a);
+        }
+        applyAnimSets(sets);
+        gs.tick(this);
 
         bp.gr = this;
 
+        ANIMSETS = new List<animSet>();
     }
+
+
+    public void applyAnimSets(List<animSet> l)
+    {
+        foreach(var v in l)
+        {
+            TileUnit tu = gs.tiles_[v.start.x, v.start.y] as TileUnit;
+            if(tu is Robot)
+            {
+                tu.anim = v.animType;
+                tu.animDir = v.anim;
+            }
+        }
+    }
+
 
     public void showOptions(TileItem tu)
     {
@@ -159,11 +196,20 @@ public class GameRenderer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        animSet a;
+        if(gs.processOne(ref GLOBAL_ANIM_X, ref GLOBAL_ANIM_Y,out a))
+        {
+
+            ANIMSETS.Add(a);
+        }
         tick_time_left -= Time.deltaTime;
         if (tick_time_left < 0)
-        { 
+        {
+            applyAnimSets(ANIMSETS);
+            ANIMSETS.Clear();
+            GLOBAL_ANIM_X = 0;
+            GLOBAL_ANIM_Y = 0;
             gs.tick(this); // actually moves the units. 
-            gs.process(); //sets up animations and moves.
             tr.DrawState(gs,false); // all animation information is lost!
             tick_time_left = TICK_TIME;
             l.color = getLighting(gs.time_hr, gs.time_min);
@@ -171,12 +217,6 @@ public class GameRenderer : MonoBehaviour
             updateResourceCount();
             towersUpdate(gs);
         }
-
-        foreach (var v in gs.player.inTiles())
-        {
-            Debug.Log(v);
-        }
-
     }
 
     public Color getLighting(int hr, int min)

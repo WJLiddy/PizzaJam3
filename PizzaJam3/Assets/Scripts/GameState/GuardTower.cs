@@ -18,8 +18,10 @@ public class GuardTower : TileUnit, Robot, Building //This interface is FUCKED
         return (t is TileUnit) && !(t as TileUnit).isFriendly();
     }
 
-    public void doRobotAI(IntVec2 pos, GameState gs)
+    public void doRobotAI(IntVec2 pos, GameState gs, ref IntVec2 animD, ref Animation anim)
     {
+        animD = new IntVec2(0, 0);
+        anim = Animation.IDLE;
         if(storedGun == null)
         {
             return;

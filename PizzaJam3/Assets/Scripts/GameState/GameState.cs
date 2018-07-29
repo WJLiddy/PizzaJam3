@@ -45,6 +45,7 @@ public class IntVec2
 
 public class GameState
 {
+    int day = 1;
     public static readonly float TREE_THRESH = 0.5f;
     public static readonly int minutes_per_tick = 5;
     public int dim_;
@@ -144,30 +145,45 @@ public class GameState
         return false;
     }
 
-    public void process()
+    public bool processOne(ref int x_start, ref int y_start, out GameRenderer.animSet a)
     {
-        for (int x = 0; x != dim_; ++x)
+        a.anim = null;
+        a.start = null;
+        a.animType = TileUnit.Animation.IDLE;
+        for (; x_start < dim_; ++x_start)
         {
-            for (int y = 0; y != dim_; ++y)
+            for (; y_start < dim_; ++y_start)
             {
-                if (tiles_[x, y] != null && tiles_[x, y] is Robot && time_hr > 5 && time_hr < 21)
+
+                if (tiles_[x_start, y_start] != null && tiles_[x_start, y_start] is Robot && time_hr > 5 && time_hr < 21)
                 {
-                    (tiles_[x, y] as Robot).doRobotAI(new IntVec2(x, y), this);
+                    a.start = new IntVec2(x_start, y_start);
+                    (tiles_[x_start, y_start] as Robot).doRobotAI(new IntVec2(x_start, y_start), this, ref a.anim, ref a.animType);
+                    y_start++;
+                    return true;
                 }
 
-                if (tiles_[x, y] != null && tiles_[x, y] is Baddie)
+                if (tiles_[x_start, y_start] != null && tiles_[x_start, y_start] is Baddie)
                 {
-                    (tiles_[x, y] as Baddie).doAI(new IntVec2(x, y), this);
+                    a.start = new IntVec2(x_start, y_start);
+                    (tiles_[x_start, y_start] as Baddie).doAI(new IntVec2(x_start, y_start), this, ref a.anim, ref a.animType);
+                    y_start++;
+                    return true;
                 }
             }
+            if(y_start >= dim_)
+            {
+                y_start = 0;
+            }
         }
+        return false;
     }
 
     public void placeItemNear(TileItem ti, IntVec2 iv)
     {
         var l = player.inTiles();
 
-        if(getItem(iv) == null)
+        if(getItem(iv) == null && !l.Contains(iv))
         {
             tiles_[iv.x, iv.y] = ti;
             return;
@@ -183,7 +199,6 @@ public class GameState
                     IntVec2 niv = new IntVec2(iv.x + x, iv.y + y);
                     if (!isOOB(niv) && getItem(niv) == null && !l.Contains(niv))
                     {
-                        Debug.Log("PLACE: " +niv);
                         tiles_[iv.x + x, iv.y + y] = ti;
                         return;
                     }
@@ -226,7 +241,7 @@ public class GameState
         {
             // Make sure nothing in the way.
             IntVec2 new_pos = new IntVec2(x + tu.animDir.x, y + tu.animDir.y);
-            if (!isOOB(new_pos) && getItem(new_pos) == null)
+            if (!isOOB(new_pos) && getItem(new_pos) == null && !player.inTiles().Contains(new_pos))
             {
                 tiles_[x, y] = null;
                 tiles_[new_pos.x, new_pos.y] = tu;
@@ -330,32 +345,53 @@ public class GameState
                 }
             }
         }
+        day++;
     }
     //Spawn 70 meters away from lighthouses.
     public void baddieSpawn(GameRenderer gr)
     {
-        for(int i = 0; i != (dim_ * dim_) / 500; ++i)
-        {
-            int x = (int)Random.Range(0, dim_);
-            int y = (int)Random.Range(0, dim_);
+            int to_spawn = 5 + 5 * (int)Mathf.Pow(day,1.5f);
+            float ang = 0;
+            int range = 20;
+            int x = 0;
+            int y = 0;
 
-            if(tiles_[x,y] == null)
+            while (range < 200)
             {
-                Baddie b = new Swarmer();
-                b.anim = TileUnit.Animation.IDLE;
-                b.gr = gr;
-                var v = b.find(new IntVec2(x, y), this, flighthouse);
-                if(v == null)
+                x = (int)(player.location.x + (range * Mathf.Sin(ang * Mathf.Deg2Rad)));
+                y = (int)(player.location.y + (range * Mathf.Cos(ang * Mathf.Deg2Rad)));
+
+                if (!isOOB(new IntVec2(x,y)) && tiles_[x, y] == null)
                 {
-                    tiles_[x, y] = b;
-                    continue;
+                    Baddie b = new Swarmer();
+                    b.anim = TileUnit.Animation.IDLE;
+                    b.gr = gr;
+                    var v = b.find(new IntVec2(x, y), this, flighthouse);
+                    if(v == null)
+                    {
+                        tiles_[x, y] = b;
+                        //OK!
+                        to_spawn--;
+                    }
+                    else if (Vector2.Distance(new Vector2(x, y), new Vector2(v.x, v.y)) > 20)
+                    {
+                        tiles_[x, y] = b;
+                        //OK!
+                        to_spawn--;
+                     }
                 }
 
-                if(Vector2.Distance(new Vector2(x,y),new Vector2(v.x,v.y)) > 70)
+                if(to_spawn == 0)
                 {
-                    tiles_[x, y] = b;
+                    return;
+                }
+
+                ang += 31;
+                if(ang > 360)
+                {
+                    ang -= 360;
+                    range += 5;
                 }
             }
-        }
     }
 }

@@ -5,5 +5,5 @@ using UnityEngine;
 public abstract class Baddie : TileUnit
 {
     // Breaks coupling, but no other way to handle bullets?
-    public abstract void doAI(IntVec2 pos, GameState gs);
+    public abstract void doAI(IntVec2 pos, GameState gs, ref IntVec2 animD, ref TileUnit.Animation anim);
  }

@@ -10,10 +10,11 @@ public class Swarmer : Baddie
         return (ti is TileUnit) && (ti as TileUnit).isFriendly();
     }
 
-    public override void doAI(IntVec2 pos, GameState gs)
+    public override void doAI(IntVec2 pos, GameState gs, ref IntVec2 animD, ref TileUnit.Animation animT)
     {
 
-        anim = Animation.IDLE;
+        animD = new IntVec2(0, 0);
+        animT = Animation.IDLE;
         IntVec2 iv = find(pos, gs, validTarget);
         if(iv == null)
         {
@@ -28,8 +29,8 @@ public class Swarmer : Baddie
             {
                 // 1 means we didnt go anywhere.
                 Debug.Assert(r.Count > 1);
-                animDir = r[1] - pos;
-                anim = Animation.MOVE;
+                animD = r[1] - pos;
+                animT = Animation.MOVE;
             }
         }
     }
@@ -38,7 +39,6 @@ public class Swarmer : Baddie
     {
         return 100;
     }
-
 
     public override bool isFriendly()
     {

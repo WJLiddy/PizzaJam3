@@ -39,6 +39,9 @@ public abstract class TileUnit : TileItem
         }
     }
 
+
+    static int MAX_RANGE = 2000;
+
     public static List<IntVec2> getPath(IntVec2 start, IntVec2 end, GameState gs)
     {
         Dictionary<IntVec2, int> dist = new Dictionary<IntVec2, int>();
@@ -49,8 +52,14 @@ public abstract class TileUnit : TileItem
         List<IntVec2> toSearch = new List<IntVec2>();
         toSearch.Add(start);
 
+        int counter = 0;
         while (toSearch.Count > 0)
         {
+            counter++;
+            if(counter > MAX_RANGE)
+            {
+                return null;
+            }
             IntVec2 minnode = null;
             foreach (IntVec2 iv2 in toSearch)
             {
@@ -109,7 +118,8 @@ public abstract class TileUnit : TileItem
         return null;
     }
 
-    int MAX_RANGE = 1000;
+
+
     public IntVec2 find(IntVec2 pos, GameState gs, Func<TileItem,bool> f)
     {
         Queue<IntVec2> searchNodes = new Queue<IntVec2>();
@@ -119,7 +129,8 @@ public abstract class TileUnit : TileItem
         int searched = 0;
         while (searchNodes.Count > 0)
         {
-            if(searched > MAX_RANGE)
+            searched++;
+            if (searched > MAX_RANGE)
             {
                 return null;
             }
@@ -147,8 +158,7 @@ public abstract class TileUnit : TileItem
                     if (!alreadyQueued.Contains(nloc) && !gs.isOOB(nloc))
                     {
                         searchNodes.Enqueue(nloc);
-                        alreadyQueued.Add(nloc);
-                        searched++;                    
+                        alreadyQueued.Add(nloc);                 
                     }
                 }
             }

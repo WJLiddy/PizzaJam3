@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface Robot
 {
-   void doRobotAI(IntVec2 pos, GameState gs);
+    void doRobotAI(IntVec2 pos, GameState gs, ref IntVec2 animD, ref TileUnit.Animation anim);
 }
