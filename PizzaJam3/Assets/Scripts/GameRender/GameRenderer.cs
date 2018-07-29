@@ -41,7 +41,7 @@ public class GameRenderer : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        Application.targetFrameRate = 20;
+        Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 0;
         gs = new GameState(100);
         gs.addClearing(new IntVec2(0, 0), 10);
@@ -63,6 +63,9 @@ public class GameRenderer : MonoBehaviour
         pr.p.gr = this; //disgusting
         gs.player.gun1 = (new Revolver()).spawn(0f);
         gs.player.gun2 = (new Revolver()).spawn(0f);
+
+        gs.player.gun1.bulletsLeft = gs.player.gun1.getCapacity();
+        gs.player.gun2.bulletsLeft = gs.player.gun2.getCapacity();
 
         bp.gs = gs;
 
@@ -304,14 +307,11 @@ public class GameRenderer : MonoBehaviour
     {
         if (in_ai_phase)
         {
-            for (int i = 0; i != 3; ++i)
-            {
                 animSet a;
                 if (gs.processOne(ref GLOBAL_ANIM_X, ref GLOBAL_ANIM_Y, out a))
                 {
                     ANIMSETS.Add(a);
                 }
-            }
         }
 
         tick_time_left -= Time.deltaTime;
