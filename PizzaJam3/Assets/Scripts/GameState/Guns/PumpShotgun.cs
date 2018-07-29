@@ -4,20 +4,16 @@ using UnityEngine;
 
 public class PumpShotgun : Gun
 {
-<<<<<<< HEAD
     public float crit_chance;
     public int capacity;
     public float range = 4;
     public float reloadtime;
     public float speed = 4;
     public float spread;
-=======
     public override string getName()
     {
         return "Pump Shotty";
     }
-
->>>>>>> 4437c264d87a89bd6bf7682755dba2acef60d4a8
     public float jam_rate = 0.1f; // this should be high for this gun I assume this is 10% chance
     public bool fullauto;
 

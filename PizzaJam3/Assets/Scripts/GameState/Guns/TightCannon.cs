@@ -4,19 +4,17 @@ using UnityEngine;
 
 public class TightCannon : Gun
 {
-<<<<<<< HEAD
     public float crit_chance;
     public int capacity;
     public float range;
     public float speed;
     public float reloadtime;
-=======
+
     public override string getName()
     {
         return "Tight Cannon";
     }
-
->>>>>>> 4437c264d87a89bd6bf7682755dba2acef60d4a8
+    
 
 
     public override Gun spawn(float rarity)

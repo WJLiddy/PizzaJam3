@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class ShortyShotgun : Gun
 {
-<<<<<<< HEAD
     public float crit_chance;
     public int capacity;
     public float range = 4;
     public float reloadtime;
     public float speed = 4;
     public float spread;
-=======
+
     public override string getName()
     {
         return "Shorty Shotty";
     }
-
->>>>>>> 4437c264d87a89bd6bf7682755dba2acef60d4a8
+    
     public float jam_rate = 0.3f; // this should be high for this gun I assume this is 30% chance
 
     public override Gun spawn(float rarity)
