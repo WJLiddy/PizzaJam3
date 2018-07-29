@@ -2,24 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RPG : Gun
-{
-    public int capacity;
-    public float reloadtime;
+public class Musket : Gun {
 
+    public float reloadtime;
 
     public override string getName()
     {
-        return "RPG";
+        return "Musket";
     }
 
 
     public override Gun spawn(float rarity)
     {
-        RPG r = new RPG();
-        r.capacity = 1 + (int)(rarity / 0.2f); //up to 5 extra
-        r.reloadtime = 6 - ((rarity / 0.2f) * capacity);
-        return r;
+        Musket m = new Musket();
+        m.reloadtime = 6 - (int)(rarity / 0.2f); //possible 1 sec reload over 6 for base
+        return m;
     }
 
 
@@ -30,16 +27,16 @@ public class RPG : Gun
         Gun.FiredProjectile b;
         b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
         b.is_crit = false;
-        b.projectile = Projectile.ProjectileType.Rocket;
-        b.range = 10;
-        b.speed = 10f;
+        b.projectile = Projectile.ProjectileType.MusketBall;
+        b.range = 9;
+        b.speed = 5f;      
         fp.Add(b);
         return fp;
     }
 
     public override int getCapacity()
     {
-        return capacity;
+        return 1;
     }
 
     public override float getReloadTime()
@@ -50,7 +47,7 @@ public class RPG : Gun
     //means time between shots
     public override float getROF()
     {
-        return 2f; // TODO: figure out why this is faster than the shotty, yet I copied it from there
+        return 1f;
     }
 
     public override bool isFullAuto()

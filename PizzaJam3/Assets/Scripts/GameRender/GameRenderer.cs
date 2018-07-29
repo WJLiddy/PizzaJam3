@@ -38,8 +38,6 @@ public class GameRenderer : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 30; // Sorry, my AI needs this extra time. Threading is out of the option since i can't clone();
         gs = new GameState(100);
         gs.addClearing(new IntVec2(0, 0), 10);
         gs.tiles_[0, 0] = new HarvesterRobot(Resource.Type.WOOD);
@@ -82,7 +80,7 @@ public class GameRenderer : MonoBehaviour
         foreach(var v in l)
         {
             TileUnit tu = gs.tiles_[v.start.x, v.start.y] as TileUnit;
-            if(tu is Robot)
+            if(tu is Robot || tu is Baddie)
             {
                 tu.anim = v.animType;
                 tu.animDir = v.anim;
@@ -199,16 +197,24 @@ public class GameRenderer : MonoBehaviour
         animSet a;
         if(gs.processOne(ref GLOBAL_ANIM_X, ref GLOBAL_ANIM_Y,out a))
         {
-
             ANIMSETS.Add(a);
         }
+
         tick_time_left -= Time.deltaTime;
         if (tick_time_left < 0)
         {
             applyAnimSets(ANIMSETS);
             ANIMSETS.Clear();
-            GLOBAL_ANIM_X = 0;
-            GLOBAL_ANIM_Y = 0;
+            if (GLOBAL_ANIM_X != gs.dim_ || GLOBAL_ANIM_Y != 0)
+            {
+                Debug.Log("failed to render in time!");
+                Debug.Log(gs.time_hr);
+            }
+            else
+            {
+                GLOBAL_ANIM_X = 0;
+                GLOBAL_ANIM_Y = 0;
+            }
             gs.tick(this); // actually moves the units. 
             tr.DrawState(gs,false); // all animation information is lost!
             tick_time_left = TICK_TIME;

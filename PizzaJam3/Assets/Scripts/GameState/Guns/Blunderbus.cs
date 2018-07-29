@@ -2,24 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RPG : Gun
-{
-    public int capacity;
-    public float reloadtime;
+public class Blunderbus : Gun {
+
+    public float range = 6;
+    public float speed = 6;
+    public float spread;
+    public int burst_size;
 
 
     public override string getName()
     {
-        return "RPG";
+        return "Blunderbus";
     }
 
 
     public override Gun spawn(float rarity)
     {
-        RPG r = new RPG();
-        r.capacity = 1 + (int)(rarity / 0.2f); //up to 5 extra
-        r.reloadtime = 6 - ((rarity / 0.2f) * capacity);
-        return r;
+        Blunderbus s = new Blunderbus();
+        s.spread = 40 - (7 * UnityEngine.Random.Range(0f, rarity));
+        s.burst_size = 3 + (int)(rarity / 0.5f);
+        return s;
     }
 
 
@@ -28,29 +30,33 @@ public class RPG : Gun
         //shoots one bullet
         List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
         Gun.FiredProjectile b;
-        b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
-        b.is_crit = false;
-        b.projectile = Projectile.ProjectileType.Rocket;
-        b.range = 10;
-        b.speed = 10f;
-        fp.Add(b);
+        for (int i = 0; i != burst_size; ++i)
+        {
+
+            b.accuracy_modifier_degree = UnityEngine.Random.Range(-spread, spread);
+            b.is_crit = false;
+            b.projectile = Projectile.ProjectileType.Fletchette;
+            b.range = range; 
+            b.speed = speed;
+            fp.Add(b);
+        }
         return fp;
     }
 
     public override int getCapacity()
     {
-        return capacity;
+        return 1;
     }
 
     public override float getReloadTime()
     {
-        return reloadtime;
+        return 5f;
     }
 
     //means time between shots
     public override float getROF()
     {
-        return 2f; // TODO: figure out why this is faster than the shotty, yet I copied it from there
+        return 1f;
     }
 
     public override bool isFullAuto()

@@ -57,7 +57,7 @@ public class Revolver : Gun
     //means time between shots
     public override float getROF()
     {
-        return 0.1f; // TODO: figure out how this looks in game
+        return 0.9f; // TODO: figure out how this looks in game
     }
 
     public override bool isFullAuto()

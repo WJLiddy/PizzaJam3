@@ -11,5 +11,6 @@ public class Projectile
         CannonBall, //   High        Big        High
         Fletchette, //   Low         Small      High
         Bullet,     //   Low         Small      Low
+        Rocket,     //   High        Big        High
     }
 }
