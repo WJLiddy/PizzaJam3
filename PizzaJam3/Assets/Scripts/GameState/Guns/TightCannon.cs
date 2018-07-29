@@ -9,6 +9,7 @@ public class TightCannon : Gun
     public float range;
     public float speed;
     public float reloadtime;
+    public bool consumeMultipleAmmoPerFire = false;
 
     public override string getName()
     {
@@ -22,8 +23,8 @@ public class TightCannon : Gun
         TightCannon c = new TightCannon();
         c.crit_chance = rarity / 30f; // Worst gun never crits, best gun crits 30%
         c.capacity = 1 + (int)(rarity / 0.5f); //up to 2 extra bullets
-        c.range = 2 + (int)UnityEngine.Random.Range(0f, 3 * rarity); // Chance of extended range if high crit chance.
-        c.speed = 2 + (int)(rarity / 0.5f);
+        c.range = 4 + (int)UnityEngine.Random.Range(0f, 3 * rarity); // Chance of extended range if high crit chance.
+        c.speed = 4 + (int)(rarity / 0.5f);
         c.reloadtime = 10 - (int)(rarity / 0.2f);
         return c;
     }
@@ -55,7 +56,7 @@ public class TightCannon : Gun
     //means time between shots
     public override float getROF()
     {
-        return 0.1f; // TODO: figure out how this looks in game
+        return 0.9f; // TODO: figure out how this looks in game
     }
 
     public override bool isFullAuto()

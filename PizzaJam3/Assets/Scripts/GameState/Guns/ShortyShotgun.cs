@@ -10,6 +10,7 @@ public class ShortyShotgun : Gun
     public float reloadtime;
     public float speed = 4;
     public float spread;
+    public bool consumeMultipleAmmoPerFire = false;
 
     public override string getName()
     {
@@ -24,7 +25,7 @@ public class ShortyShotgun : Gun
         s.crit_chance = rarity / 30f; // Worst gun never crits, best gun crits 30%
         s.capacity = 4 + (int)(rarity / 0.1f); //up to 10 extra bullets
         s.jam_rate = (1f - rarity) / 30; // TODO: copied from m4. need to adjust should be high
-        s.reloadtime = ((5 - (rarity / 0.2f)) * capacity); // should be based on how many shells have been fired
+        s.reloadtime = 6 - ((rarity / 0.2f) * capacity); // should be based on how many shells have been fired
         s.spread = 40 - (7 * UnityEngine.Random.Range(0f, rarity));
         return s;
     }
@@ -60,7 +61,7 @@ public class ShortyShotgun : Gun
     //means time between shots
     public override float getROF()
     {
-        return 0.4f; // TODO: figure out how this looks in game but slower than this
+        return 0.9f; // TODO: figure out how this looks in game but slower than this
     }
 
     public override bool isFullAuto()
