@@ -17,6 +17,9 @@ public class PlayerSprite : MonoBehaviour
     float reload_timer_1 = 0;
     float reload_timer_2 = 0;
 
+    float auto_recoil_timer_1 = 0;
+    float auto_recoil_timer_2 = 0;
+
     GameState gs;
     public GameRenderer gr;
     Dictionary<string, Sprite> sprs = new Dictionary<string, Sprite>();
@@ -149,10 +152,15 @@ public class PlayerSprite : MonoBehaviour
             reload_timer_2 = gs.player.gun2.getReloadTime();
         }
 
-        if (Input.GetMouseButton(0) && gs.player.gun1 != null && reload_timer_1 <= 0)
+        if (Input.GetMouseButton(0) && gs.player.gun1 != null && reload_timer_1 <= 0 && auto_recoil_timer_1 <= 0)
         {
             if (!gun1_did_fire_last_frame || gs.player.gun1.isFullAuto())
             {
+                if(gs.player.gun1.isFullAuto())
+                {
+                    auto_recoil_timer_1 = gs.player.gun1.getROF();
+                }
+
                 gun1_did_fire_last_frame = true;
                 shootGun(gr, gs.player.gun1);
             }
@@ -162,10 +170,14 @@ public class PlayerSprite : MonoBehaviour
             gun1_did_fire_last_frame = false;
         }
 
-        if (Input.GetMouseButton(1) && gs.player.gun2 != null && reload_timer_2 <= 0)
+        if (Input.GetMouseButton(1) && gs.player.gun2 != null && reload_timer_2 <= 0 && auto_recoil_timer_2 <= 0)
         {
             if (!gun2_did_fire_last_frame || gs.player.gun2.isFullAuto())
             {
+                if (gs.player.gun2.isFullAuto())
+                {
+                    auto_recoil_timer_2 = gs.player.gun2.getROF();
+                }
                 gun2_did_fire_last_frame = true;
                 shootGun(gr, gs.player.gun2);
             }
@@ -184,6 +196,17 @@ public class PlayerSprite : MonoBehaviour
         if (reload_timer_2 > 0)
         {
             reload_timer_2 -= Time.deltaTime;
+        }
+
+        if (auto_recoil_timer_1 > 0)
+        {
+            auto_recoil_timer_1 -= Time.deltaTime;
+        }
+
+
+        if (auto_recoil_timer_2 > 0)
+        {
+            auto_recoil_timer_2 -= Time.deltaTime;
         }
     }
 
