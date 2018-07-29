@@ -53,11 +53,10 @@ public class GameRenderer : MonoBehaviour
         g.gr = this;
         addGuardLight(new IntVec2(8, 8));
         gs.tiles_[8, 8] = g;
-
-        //temp.
+        
         gs.player_wood = 2000;
         gs.time_hr = 9;
-       
+
         tr.Setup(gs);
         gs.player = new Player();
         pr.addPlayer(gs);

@@ -24,7 +24,7 @@ public class PumpShotgun : Gun
         PumpShotgun s = new PumpShotgun();
         s.crit_chance = rarity * 0.3f; // Worst gun never crits, best gun crits 30%
         s.capacity = 7 + (int)(rarity * 4); //up to 10 extra bullets
-        s.reloadtime = (capacity/2);
+        s.reloadtime = (s.capacity/2);
         s.spread = 15 - (7 * UnityEngine.Random.Range(0f, rarity));
         s.burst_size = 10 + (int)(rarity * 5);
         return s;
@@ -41,7 +41,8 @@ public class PumpShotgun : Gun
             b.is_crit = false;
             b.projectile = Projectile.ProjectileType.Bullet;
             b.range = Random.Range(7,12); // TODO: also not sure what this effects, and speed should also be slower
-            b.speed = speed;     
+            b.speed = speed;
+            fp.Add(b);
         }
         return fp;
     }
