@@ -6,6 +6,7 @@ using UnityEngine;
 public class M4: Gun
 {
     public float jam_rate = 0;
+    public bool consumeMultipleAmmoPerFire = false;
 
     public override string getName()
     {

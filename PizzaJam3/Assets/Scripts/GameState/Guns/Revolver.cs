@@ -10,6 +10,7 @@ public class Revolver : Gun
     public float range;
     public float reloadtime;
     public float speed = 4f;
+    public bool consumeMultipleAmmoPerFire = false;
 
     public override string getName()
     {
@@ -21,7 +22,7 @@ public class Revolver : Gun
     {
         Revolver r = new Revolver();
         r.capacity = 5 + (int)(rarity / 0.2f); //up to 5 extra bullets
-        r.range = 4 + (int)UnityEngine.Random.Range(0f, 4 * rarity); // Chance of extended range if high crit chance.
+        r.range = 6 + (int)UnityEngine.Random.Range(0f, 4 * rarity); // Chance of extended range if high crit chance.
         r.reloadtime = 6 - (int)(rarity / 0.2f); //possible 1 sec reload over 6 for base
         r.crit_chance = rarity / 20f; // Worst gun never crits, best gun crits 20%
         return r;
