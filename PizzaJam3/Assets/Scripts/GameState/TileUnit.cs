@@ -15,6 +15,8 @@ public abstract class TileUnit : TileItem
         STORE
     }
 
+    //needed to shoot bullet, fuck.
+    public GameRenderer gr;
     public Animation anim;
     public IntVec2 animDir;
     private int HP;
@@ -153,4 +155,18 @@ public abstract class TileUnit : TileItem
         }
         return null;
     }
+
+    public void shootProjectile(IntVec2 this_pos, Projectile.ProjectileType pt, IntVec2 targetTile, float velocity, float range)
+    {
+        Gun.FiredProjectile fp;
+        fp.accuracy_modifier_degree = 0;
+        fp.is_crit = false;
+        fp.projectile = Projectile.ProjectileType.Bullet;
+        fp.range = range;
+        fp.speed = velocity;
+
+        gr.AddBullet(fp, Mathf.Atan2(this_pos.y - targetTile.y, this_pos.x - targetTile.x), new Vector2(this_pos.x, this_pos.y));
+    }
+
+
 }
