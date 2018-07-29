@@ -32,7 +32,6 @@ public class GunSmith : TileUnit, Robot, Building
         {
             //make gun
             float base_rarity = Math.Min(1,(oil / 3000f));
-            Debug.Log("making gun" + base_rarity);
             var guns = allGuns();
             int gunid = UnityEngine.Random.Range(0, Math.Min(gs.day, allGuns().Count));
             gs.placeItemNear(new GroundGun(guns[gunid].spawn(base_rarity)), pos);

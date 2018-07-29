@@ -102,6 +102,16 @@ public class GameRenderer : MonoBehaviour
         }
     }
 
+    public string resourceName(Resource.Type t)
+    {
+        switch(t)
+        {
+            case Resource.Type.WOOD: return "Wood";
+            case Resource.Type.ORE: return "Ore";
+            case Resource.Type.OIL: return "Oil";
+        }
+        return "";
+    }
 
     public void showOptions(TileItem tu)
     {
@@ -126,8 +136,8 @@ public class GameRenderer : MonoBehaviour
                 case Resource.Type.ORE: costof2 = BALANCE_CONSTANTS.FOUNDRY_COLLECTOR_COST; break;
             }
 
-            bItem1.GetComponentInChildren<Text>().text = "Make Harvester\n" + gs.priceRenderNoNewline(costof1);
-            bItem2.GetComponentInChildren<Text>().text = "Make Collector\n" + gs.priceRenderNoNewline(costof2);
+            bItem1.GetComponentInChildren<Text>().text = "Build " + resourceName((tu as Storage).type) + " Harvester\n" + gs.priceRenderNoNewline(costof1);
+            bItem2.GetComponentInChildren<Text>().text = "Build " + resourceName((tu as Storage).type) + " Collector\n" + gs.priceRenderNoNewline(costof2);
         } else if(tu is GuardTower)
         {
             bItem1.SetActive(gs.player.gun1 != null);
@@ -316,7 +326,6 @@ public class GameRenderer : MonoBehaviour
                 if (GLOBAL_ANIM_X != gs.dim_ || GLOBAL_ANIM_Y != 0)
                 {
                     Debug.Log("failed to render in time!");
-                    Debug.Log(gs.time_hr);
                 }
                 else
                 {
@@ -325,13 +334,13 @@ public class GameRenderer : MonoBehaviour
                 }
                 in_ai_phase = false;
                 tr.DrawState(gs,false);
-                tick_time_left = AI_TIME;
+                tick_time_left = DRAW_TIME;
             } else
             {
                 //draw state ended, put people down.
                 gs.tick(this); // actually moves the units. 
                 tr.DrawState(gs, false); // all animation information is lost, but Ai is now thinking.
-                tick_time_left = DRAW_TIME;
+                tick_time_left = AI_TIME;
                 l.color = getLighting(gs.time_hr, gs.time_min);
                 time.text = getTime(gs.time_hr, gs.time_min);
                 updateResourceCount();

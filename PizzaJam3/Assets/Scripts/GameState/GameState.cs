@@ -119,7 +119,7 @@ public class GameState
 
     public void addGuns()
     {
-        for (int i = 0; i != ((dim_ * dim_) / 2000); ++i)
+        for (int i = 0; i != ((dim_ * dim_) / 1000); ++i)
         {
             Gun g = null;
             switch(Random.Range(0,4))
