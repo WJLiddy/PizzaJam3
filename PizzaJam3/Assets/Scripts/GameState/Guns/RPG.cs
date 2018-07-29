@@ -5,6 +5,7 @@ using UnityEngine;
 public class RPG : Gun
 {
     public int capacity;
+    public float reloadtime;
 
 
     public override string getName()
@@ -17,6 +18,7 @@ public class RPG : Gun
     {
         RPG r = new RPG();
         r.capacity = 1 + (int)(rarity / 0.2f); //up to 5 extra
+        r.reloadtime = 6 - ((rarity / 0.2f) * capacity);
         return r;
     }
 
@@ -31,7 +33,7 @@ public class RPG : Gun
         b.projectile = Projectile.ProjectileType.Bullet; // needs replaced by rocket
         b.range = 10;
         b.speed = 10f;
-        
+        fp.Add(b);
         return fp;
     }
 
@@ -42,13 +44,13 @@ public class RPG : Gun
 
     public override float getReloadTime()
     {
-        return 3f;
+        return reloadtime;
     }
 
     //means time between shots
     public override float getROF()
     {
-        return 2f;
+        return 2f; // TODO: figure out why this is faster than the shotty, yet I copied it from there
     }
 
     public override bool isFullAuto()
