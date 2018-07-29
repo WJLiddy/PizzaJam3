@@ -61,8 +61,8 @@ public class GameRenderer : MonoBehaviour
         gs.player = new Player();
         pr.addPlayer(gs);
         pr.p.gr = this; //disgusting
-        gs.player.gun1 = (new RPG()).spawn(0f);
-        gs.player.gun2 = (new TightCannon()).spawn(0f);
+        gs.player.gun1 = (new Revolver()).spawn(0f);
+        gs.player.gun2 = (new Revolver()).spawn(0f);
 
         bp.gs = gs;
 
