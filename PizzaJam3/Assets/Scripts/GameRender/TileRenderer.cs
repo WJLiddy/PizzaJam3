@@ -76,7 +76,7 @@ public class TileRenderer : MonoBehaviour
                 }
                 else if (gs.tiles_[x, y] is Building)
                 {
-                    renderBuilding(gs.tiles_[x, y] as Storage, x, y);
+                    renderBuilding(gs.tiles_[x, y] as Building, x, y);
                 }
 
             }
