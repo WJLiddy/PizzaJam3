@@ -34,7 +34,7 @@ public class ShortyShotgun : Gun
         //shoots one bullet
         List<Gun.FiredProjectile> fp = new List<FiredProjectile>();
         Gun.FiredProjectile b;
-        b.accuracy_modifier_degree = UnityEngine.Random.Range(-7f, 7f);
+        b.accuracy_modifier_degree = UnityEngine.Random.Range(-spread, spread);
         b.is_crit = false;
         b.projectile = Projectile.ProjectileType.Fletchette;
         b.range = 9; // TODO: also not sure what this effects, and speed should also be slower
