@@ -43,7 +43,7 @@ public class GuardTower : TileUnit, Robot, Building //This interface is FUCKED
                     return;
                 }
                 storedGun.bulletsLeft--;
-                shootProjectile(pos, b.projectile, v, b.speed, b.range);              
+                shootProjectile(pos, b.projectile, v, b.speed, b.range,true);              
             }
         }
     }

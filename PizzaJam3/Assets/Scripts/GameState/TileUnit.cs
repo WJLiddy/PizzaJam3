@@ -156,7 +156,7 @@ public abstract class TileUnit : TileItem
         return null;
     }
 
-    public void shootProjectile(IntVec2 this_pos, Projectile.ProjectileType pt, IntVec2 targetTile, float velocity, float range)
+    public void shootProjectile(IntVec2 this_pos, Projectile.ProjectileType pt, IntVec2 targetTile, float velocity, float range, bool allied)
     {
         Gun.FiredProjectile fp;
         fp.accuracy_modifier_degree = 0;
@@ -165,7 +165,7 @@ public abstract class TileUnit : TileItem
         fp.range = range;
         fp.speed = velocity;
 
-        gr.AddBullet(fp, Mathf.Atan2(this_pos.y - targetTile.y, this_pos.x - targetTile.x), new Vector2(this_pos.x, this_pos.y));
+        gr.AddBullet(fp, Mathf.Atan2(this_pos.y - targetTile.y, this_pos.x - targetTile.x), new Vector2(this_pos.x, this_pos.y),allied);
     }
 
 

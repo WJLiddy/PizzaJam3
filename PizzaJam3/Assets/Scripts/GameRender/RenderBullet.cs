@@ -13,6 +13,7 @@ public class RenderBullet : MonoBehaviour
     public Vector2 start;
     int dmg = 10;
     bool startSet = false;
+    public bool friendlyBullet;
 
     public void Update()
     {
@@ -34,6 +35,14 @@ public class RenderBullet : MonoBehaviour
             int x = Convert.ToInt32(other.name.Split(',')[0]);
             int y = Convert.ToInt32(other.name.Split(',')[1]);
             bool stop;
+            if (gs.getItem(new IntVec2(x, y)) != null && (gs.getItem(new IntVec2(x, y)) is TileUnit))
+            {
+                if((gs.getItem(new IntVec2(x, y)) as TileUnit).isFriendly() == friendlyBullet)
+                {
+                    return;
+                }
+            }
+
             bool damaged = gs.hurt(x,y,dmg, out stop);
             if(damaged)
             {
