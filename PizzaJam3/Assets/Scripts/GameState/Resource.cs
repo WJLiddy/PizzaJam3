@@ -25,7 +25,7 @@ public class Resource : TileItem
 
     private static Resource makeOre()
     {
-        return new Resource(Type.ORE, 100 * (int)Random.Range(2, 5));
+        return new Resource(Type.ORE, 100 * (int)Random.Range(4, 7));
     }
 
     private static Resource makeOil()

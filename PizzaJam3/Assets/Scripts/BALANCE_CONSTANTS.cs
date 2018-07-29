@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class BALANCE_CONSTANTS
 {
-    public static int WORKER_HP = 50;
-    public static int WAREHOUSE_HP = 400;
+    public static int WORKER_HP = 70;
+    public static int WAREHOUSE_HP = 500;
     public static int BADDIE_HP = 25;
     public static int BADDIE_HP_GROWTH_DAY = 15;
     public static int TOWER_HP = 300;
