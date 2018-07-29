@@ -14,7 +14,7 @@ public class BuildPanel : MonoBehaviour
             case "sawmill": tu = new Storage(Resource.Type.WOOD); break;
             case "foundry": tu = new Storage(Resource.Type.ORE); break;
             case "refinery": tu = new Storage(Resource.Type.OIL); break;
-            case "guard tower": tu = new GuardTower(); break;
+            case "guardtower": tu = new GuardTower(); break;
         }
         if(tu == null)
         {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuardTower : TileUnit, Robot //This interface is FUCKED
+public class GuardTower : TileUnit, Robot, Building //This interface is FUCKED
 {
     public Gun storedGun;
     public float reloadTime;
@@ -57,4 +57,10 @@ public class GuardTower : TileUnit, Robot //This interface is FUCKED
     {
         return true;
     }
+
+    public string renderName()
+    {
+        return "guardtower";
+    }
 }
+
