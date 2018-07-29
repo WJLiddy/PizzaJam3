@@ -31,9 +31,9 @@ public class GunSmith : TileUnit, Robot, Building
         if((gs.time_hr == 0 || gs.time_hr == 12) && gs.time_min == 0)
         {
             //make gun
-            float base_rarity = Math.Min(1,(oil / 3000f));
+            float base_rarity = Math.Min(1, 0.3f + (oil / 3000f));
             var guns = allGuns();
-            int gunid = UnityEngine.Random.Range(0, Math.Min(gs.day, allGuns().Count));
+            int gunid = UnityEngine.Random.Range(0, Math.Min(gs.day * 2, allGuns().Count));
             gs.placeItemNear(new GroundGun(guns[gunid].spawn(base_rarity)), pos);
             oil = 0;
         }

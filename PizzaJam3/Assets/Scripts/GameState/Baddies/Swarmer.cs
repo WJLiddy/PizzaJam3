@@ -30,7 +30,8 @@ public class Swarmer : Baddie
         Debug.Assert(pos != null);
         if (Vector2.Distance(new Vector2(iv.x, iv.y), new Vector2(pos.x, pos.y)) < 7f)
         {
-            shootProjectile(pos, Projectile.ProjectileType.Bullet, iv, 3, 4, false);
+            int accmod = UnityEngine.Random.Range(-5, 5);
+            shootProjectile(pos, Projectile.ProjectileType.Bullet, iv, 3, 4, accmod, false);
         }
         if(iv != null)
         {

@@ -45,22 +45,22 @@ public class RenderBullet : MonoBehaviour
             int dmg = 0;
             if (type == Projectile.ProjectileType.Bullet)
             {
-                dmg = UnityEngine.Random.Range(7, 11);
+                dmg = UnityEngine.Random.Range(11, 15);
             }
 
             if(type == Projectile.ProjectileType.Musket)
             {
-                dmg = UnityEngine.Random.Range(20, 30);
+                dmg = UnityEngine.Random.Range(30, 50);
             }
 
             if (type == Projectile.ProjectileType.CannonBall)
             {
-                dmg = UnityEngine.Random.Range(40, 75);
+                dmg = UnityEngine.Random.Range(65, 100);
             }
 
             if (type == Projectile.ProjectileType.Rocket)
             {
-                dmg = UnityEngine.Random.Range(100, 200);
+                dmg = UnityEngine.Random.Range(175, 300);
 
             }
 

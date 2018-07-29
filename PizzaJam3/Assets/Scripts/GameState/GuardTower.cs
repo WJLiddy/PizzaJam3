@@ -48,7 +48,7 @@ public class GuardTower : TileUnit, Robot, Building //This interface is FUCKED
                 {
                     storedGun.bulletsLeft--;
                 }
-                shootProjectile(pos, b.projectile, v, b.speed, b.range,true);              
+                shootProjectile(pos, b.projectile, v, b.speed, b.range, b.accuracy_modifier_degree, true);              
             }
             if (!storedGun.consumeMultipleAmmoPerFire())
             {

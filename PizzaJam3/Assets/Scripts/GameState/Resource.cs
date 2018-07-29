@@ -20,17 +20,17 @@ public class Resource : TileItem
 
     private static Resource makeTree()
     {
-        return new Resource(Type.WOOD, 200);
+        return new Resource(Type.WOOD, 100);
     }
 
     private static Resource makeOre()
     {
-        return new Resource(Type.ORE, 1000 * (int)Random.Range(1, 5));
+        return new Resource(Type.ORE, 100 * (int)Random.Range(2, 5));
     }
 
     private static Resource makeOil()
     { 
-        return new Resource(Type.OIL, 1000* (int)Random.Range(10, 20));
+        return new Resource(Type.OIL, 100 * (int)Random.Range(20, 50));
     }
 
     private static void createWood(GameState g, IntVec2 iv)
